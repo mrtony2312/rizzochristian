@@ -439,6 +439,38 @@
 	font-weight: 600;
 }
 
+.ph-whatsapp-button {
+	position: fixed;
+	right: 22px;
+	bottom: 22px;
+	z-index: 9998;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 58px;
+	height: 58px;
+	padding: 0;
+	border-radius: 999px;
+	background: #25d366;
+	color: #fff !important;
+	text-decoration: none !important;
+	box-shadow: none;
+	transition: transform 0.18s ease, background-color 0.18s ease;
+}
+
+.ph-whatsapp-button:hover,
+.ph-whatsapp-button:focus-visible {
+	background: #1ebe57;
+	color: #fff !important;
+	transform: translateY(-2px);
+}
+
+.ph-whatsapp-button svg {
+	width: 28px;
+	height: 28px;
+	flex: 0 0 auto;
+}
+
 @media (max-width: 768px) {
 	.auth-card {
 		padding: 28px 20px;
@@ -451,5 +483,12 @@
 
 	.track-submit {
 		max-width: none;
+	}
+
+	.ph-whatsapp-button {
+		right: 14px;
+		bottom: 14px;
+		width: 56px;
+		height: 56px;
 	}
 }

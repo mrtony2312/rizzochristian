@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'whatsapp' => [
+        'number' => env('WHATSAPP_NUMBER', ''),
+        'message' => env('WHATSAPP_MESSAGE', 'Buongiorno, vorrei informazioni sui vostri prodotti.'),
+    ],
+
 ];

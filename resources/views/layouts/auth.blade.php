@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>@yield('title', 'Rizzo Christian')</title>
-	<link rel="stylesheet" href="{{ asset('css/pages.css') }}?ver=4">
+	<link rel="stylesheet" href="{{ asset('css/pages.css') }}?ver=6">
 </head>
 <body class="auth-layout">
 	<div class="auth-page">
