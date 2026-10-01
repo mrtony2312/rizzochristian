@@ -1,0 +1,30 @@
+[
+  {
+    "id": 420,
+    "name": "Legna da ardere",
+    "slug": "legna-da-ardere",
+    "description": "",
+    "image": "wp-content/uploads/2026/05/slider-zermatt-pellets-2.jpg"
+  },
+  {
+    "id": 421,
+    "name": "Bricchetti di legno",
+    "slug": "bricchetti-di-legno",
+    "description": "",
+    "image": "wp-content/uploads/2026/05/slider-zermatt-pellets-2.jpg"
+  },
+  {
+    "id": 415,
+    "name": "Pellet di legno",
+    "slug": "pellet-di-legno",
+    "description": "",
+    "image": "wp-content/uploads/2026/05/slider-zermatt-pellets-2.jpg"
+  },
+  {
+    "id": 419,
+    "name": "Stufe a pellet",
+    "slug": "stufe-a-pellet",
+    "description": "",
+    "image": "wp-content/uploads/2026/05/slider-zermatt-pellets-2.jpg"
+  }
+]

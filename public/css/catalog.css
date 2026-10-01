@@ -1,0 +1,587 @@
+/* Catalog / product / modal fixes */
+
+/* ---- Category hero: make banner image clearly visible ---- */
+.page-header--products.page-header--standard .page-header__content {
+	position: relative;
+	min-height: 280px;
+	padding: 36px 40px !important;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	overflow: hidden;
+	border-radius: 2px;
+}
+
+.page-header--products.page-header--standard .page-header__image {
+	position: absolute;
+	inset: 0;
+	/* Fixed catalog hero — never changes between shop / categories / filters */
+	background-image: url(/wp-content/uploads/2026/05/slider-zermatt-pellets-2.jpg) !important;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+	z-index: 1;
+}
+
+.page-header--products.page-header--standard .page-header__image-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0.22) 48%, rgba(255, 255, 255, 0) 100%);
+	pointer-events: none;
+}
+
+.page-header--products.page-header--standard .page-header__title {
+	position: relative;
+	z-index: 2;
+	max-width: none !important;
+	font-size: 2.5rem !important;
+	line-height: 1.15 !important;
+	font-weight: 700 !important;
+	color: #1d2128 !important;
+	margin: 0 !important;
+}
+
+@media (max-width: 767px) {
+	.page-header--products.page-header--standard .page-header__content {
+		min-height: 180px;
+		padding: 24px 16px !important;
+	}
+	.page-header--products.page-header--standard .page-header__title {
+		font-size: 1.85rem !important;
+	}
+}
+
+/* ---- Desktop catalog sidebar (undo Motta off-canvas wrappers) ---- */
+@media (min-width: 992px) {
+	.motta-catalog-page.sidebar-content .site-content .site-content-container {
+		display: flex !important;
+		flex-wrap: nowrap !important;
+		align-items: flex-start;
+		gap: 0;
+	}
+
+	.motta-catalog-page.sidebar-content .catalog-sidebar.widget-area {
+		display: block !important;
+		position: static !important;
+		flex: 0 0 24.5% !important;
+		width: 24.5% !important;
+		max-width: 24.5% !important;
+		padding-right: 24px !important;
+		order: 1;
+		height: auto !important;
+		visibility: visible !important;
+		z-index: 1;
+	}
+
+	.motta-catalog-page.sidebar-content .content-area {
+		flex: 0 0 75.5% !important;
+		width: 75.5% !important;
+		order: 2;
+	}
+
+	.motta-catalog-page .catalog-sidebar .sidebar__backdrop {
+		display: none !important;
+	}
+
+	.motta-catalog-page .catalog-sidebar .sidebar__container {
+		position: static !important;
+		transform: none !important;
+		width: 100% !important;
+		max-width: none !important;
+		height: auto !important;
+		box-shadow: none !important;
+		background: transparent !important;
+		display: block !important;
+	}
+
+	.motta-catalog-page .catalog-sidebar .sidebar__header,
+	.motta-catalog-page .catalog-sidebar .panel__button-close {
+		display: none !important;
+	}
+
+	.motta-catalog-page .catalog-sidebar .sidebar__content {
+		padding: 0 !important;
+		overflow: visible !important;
+	}
+
+	.motta-catalog-page .catalog-sidebar .products-filter-widget .products-filter__button {
+		position: static !important;
+		left: auto !important;
+		bottom: auto !important;
+		width: auto !important;
+		box-shadow: none !important;
+		background: transparent !important;
+		display: flex !important;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 16px;
+		padding: 0 !important;
+	}
+
+	.motta-catalog-page .catalog-sidebar .products-filter-widget .widget-title {
+		display: flex !important;
+	}
+}
+
+/* ---- Mobile filter drawer ---- */
+@media (max-width: 991px) {
+	.motta-catalog-page .catalog-sidebar.widget-area {
+		position: fixed;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 1600;
+		display: none;
+		padding: 0 !important;
+	}
+
+	.motta-catalog-page .catalog-sidebar.widget-area.is-open,
+	.motta-catalog-page .catalog-sidebar.widget-area.offscreen-panel--open {
+		display: block !important;
+	}
+
+	.motta-catalog-page .catalog-sidebar .sidebar__backdrop {
+		display: block;
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.2);
+		cursor: pointer;
+	}
+
+	.motta-catalog-page .catalog-sidebar .sidebar__container {
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
+		width: min(375px, 92vw);
+		max-width: 100%;
+		background: #fff;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16);
+		transform: translateX(-100%);
+		transition: transform 0.35s ease;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.motta-catalog-page .catalog-sidebar.is-open .sidebar__container,
+	.motta-catalog-page .catalog-sidebar.offscreen-panel--open .sidebar__container {
+		transform: none;
+	}
+
+	.motta-catalog-page .catalog-sidebar .sidebar__header {
+		display: block;
+		padding: 18px 20px;
+		font-weight: 600;
+		border-bottom: 1px solid #ecf0f4;
+	}
+
+	.motta-catalog-page .catalog-sidebar .panel__button-close {
+		display: block;
+		position: absolute;
+		right: 16px;
+		top: 16px;
+		cursor: pointer;
+		z-index: 2;
+	}
+
+	.motta-catalog-page .catalog-sidebar .sidebar__content {
+		flex: 1;
+		overflow: auto;
+		padding: 12px 20px 90px;
+	}
+
+	.motta-catalog-page .catalog-sidebar .products-filter-widget .products-filter__button {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		background: #fff;
+		box-shadow: 0 0 16px rgba(0, 0, 0, 0.12);
+		display: flex;
+		gap: 8px;
+		padding: 8px;
+		margin: 0;
+	}
+}
+
+/* Hide Motta fixed bottom filter bar leftovers */
+.motta-catalog-page .catalog-sidebar .products-filter-widget .products-filter__button {
+	display: none !important;
+}
+
+/* Apply button next to Min/Max (as on Motta reference) */
+.products-filter-widget .products-filter--ranges + .product-filter-box,
+.products-filter-widget .product-filter-box {
+	display: flex !important;
+	align-items: center;
+	gap: 8px;
+	margin-top: 18px;
+}
+
+.products-filter-widget .product-filter-box input {
+	flex: 1 1 0;
+	min-width: 0;
+	max-width: 88px;
+	height: 44px;
+	text-align: center;
+}
+
+.products-filter-widget .product-filter-box .motta-button-range,
+.products-filter-widget .product-filter-box .filter-button {
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 auto;
+	min-height: 44px;
+	height: 44px;
+	padding: 0 16px !important;
+	margin: 0 0 0 4px !important;
+	background: #1d2128 !important;
+	color: #fff !important;
+	border: none !important;
+	border-radius: 4px;
+	font-weight: 500;
+	line-height: 44px !important;
+	width: auto !important;
+	cursor: pointer;
+}
+
+/* Refine by tags */
+.products-filter-widget .products-filter__activated {
+	border-bottom: 1px solid #ecf0f4;
+	padding-bottom: 16px;
+	margin-bottom: 8px;
+}
+
+.products-filter-widget .products-filter__activated-heading {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 8px 0 14px;
+}
+
+.products-filter-widget .products-filter__activated-heading h6 {
+	margin: 0;
+	font-size: 1rem;
+	font-weight: 600;
+}
+
+.products-filter-widget .products-filter__activated-heading .reset-button {
+	font-weight: 500;
+	color: #1d2128;
+	text-decoration: none;
+}
+
+.products-filter-widget a.remove-filtered,
+.products-filter-widget span.remove-filtered {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0 8px 8px 0;
+	padding: 6px 10px;
+	font-size: 0.7rem;
+	background: #1d2128;
+	color: #fff !important;
+	border-radius: 4px;
+	text-decoration: none !important;
+}
+
+.products-filter-widget .products-filter--list .selected .products-filter__option-name,
+.products-filter-widget .products-filter--list .active .products-filter__option-name {
+	text-decoration: underline;
+	font-weight: 600;
+}
+
+/* Make Motta fake-checkboxes clickable via our JS + selected state */
+.products-filter-widget .products-filter--checkboxes .filter-checkboxes-item {
+	cursor: pointer;
+}
+
+.products-filter-widget .products-filter--checkboxes .selected > .products-filter__option-name {
+	color: #1d2128;
+}
+
+/* AJAX catalog loader */
+.catalog-products-wrap {
+	position: relative;
+	min-height: 180px;
+}
+
+.catalog-products-wrap.is-loading [data-catalog-results] {
+	opacity: 0.35;
+	pointer-events: none;
+}
+
+.catalog-ajax-loader {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 5;
+}
+
+.catalog-ajax-loader[hidden] {
+	display: none !important;
+}
+
+.catalog-ajax-loader__spinner {
+	width: 36px;
+	height: 36px;
+	border: 3px solid #dadfe3;
+	border-top-color: #1d2128;
+	border-radius: 50%;
+	animation: ph-spin 0.7s linear infinite;
+}
+
+@keyframes ph-spin {
+	to { transform: rotate(360deg); }
+}
+
+/* ---- Product card ATC button ---- */
+ul.products li.product .product-actions .motta-add-to-cart.motta-button--atc,
+ul.products li.product .product-actions button.motta-add-to-cart,
+ul.products li.product .motta-add-to-cart {
+	display: inline-flex !important;
+	flex-direction: row !important;
+	flex-wrap: nowrap !important;
+	align-items: center !important;
+	justify-content: center !important;
+	gap: 8px;
+	width: 100% !important;
+	min-height: 44px !important;
+	height: 44px !important;
+	padding: 0 14px !important;
+	margin: 0 !important;
+	background: var(--mt-color__primary, #3449ca) !important;
+	color: #fff !important;
+	border: none !important;
+	border-radius: 4px !important;
+	font-weight: 600;
+	font-size: 0.9rem !important;
+	line-height: 1 !important;
+	white-space: nowrap !important;
+	box-shadow: none !important;
+	cursor: pointer;
+	text-align: center;
+}
+
+ul.products li.product .product-actions .motta-add-to-cart .motta-svg-icon,
+ul.products li.product .product-actions button.motta-add-to-cart .motta-svg-icon {
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 auto;
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	line-height: 1;
+	margin: 0 !important;
+}
+
+ul.products li.product .product-actions .motta-add-to-cart .motta-svg-icon svg {
+	width: 18px;
+	height: 18px;
+	display: block;
+}
+
+ul.products li.product .product-actions .motta-add-to-cart .add-to-cart-text {
+	display: inline !important;
+	white-space: nowrap !important;
+	line-height: 1 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+ul.products li.product .product-actions .motta-add-to-cart:hover {
+	background: var(--mt-color__primary--dark, #2e3fa3) !important;
+	color: #fff !important;
+}
+
+/* Keep hover panel compact so the ATC button doesn't stretch the card */
+ul.products.product-card-layout-4 li.product .product-actions {
+	padding: 10px 16px 14px !important;
+}
+
+ul.products.product-card-layout-4 li.product .product-actions .product-featured-icons {
+	margin-top: 12px !important;
+	gap: 18px;
+}
+
+/* ---- Quick view modal ---- */
+.quick-view-modal.modal {
+	display: none;
+	align-items: stretch;
+	justify-content: center;
+}
+
+.quick-view-modal.modal.modal--open,
+.quick-view-modal.modal.is-open {
+	display: block !important;
+	visibility: visible !important;
+	z-index: 2000;
+}
+
+.quick-view-modal .modal__product.product-quickview {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 28px;
+	padding: 28px;
+	align-items: start;
+}
+
+@media (max-width: 767px) {
+	.quick-view-modal .modal__product.product-quickview {
+		grid-template-columns: 1fr;
+		padding: 20px;
+	}
+}
+
+.quick-view-modal .motta-product-gallery-quickview img {
+	width: 100%;
+	height: auto;
+	display: block;
+	background: #f7f8fa;
+}
+
+.quick-view-modal .summary .product_title {
+	font-size: 1.35rem;
+	margin: 0 0 8px;
+}
+
+/* ---- Qty stepper (product + quickview) matching Motta reference ---- */
+.quick-view-modal .cart-panel-qty,
+.quick-view-modal .quantity.motta-qty-stepper,
+.single-product .quantity.motta-qty-stepper {
+	display: inline-flex !important;
+	align-items: center;
+	border: 1px solid #d5d9de;
+	border-radius: 8px;
+	overflow: visible;
+	height: 48px;
+	background: #fff;
+	width: auto !important;
+	min-width: 0 !important;
+	margin: 0;
+	padding: 4px;
+	gap: 2px;
+}
+
+.quick-view-modal .quantity.motta-qty-stepper .qty-btn,
+.single-product .quantity.motta-qty-stepper .qty-btn {
+	width: 36px !important;
+	min-width: 36px !important;
+	max-width: 36px !important;
+	height: 36px !important;
+	border: none !important;
+	background: #f3f5f7 !important;
+	border-radius: 50% !important;
+	cursor: pointer;
+	color: #1d2128;
+	font-size: 18px;
+	line-height: 1;
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+	padding: 0 !important;
+	box-shadow: none !important;
+	flex: 0 0 36px;
+}
+
+.quick-view-modal .quantity.motta-qty-stepper .qty-btn:hover,
+.single-product .quantity.motta-qty-stepper .qty-btn:hover {
+	background: #e8ebef !important;
+}
+
+.quick-view-modal .quantity.motta-qty-stepper .qty,
+.single-product .quantity.motta-qty-stepper .qty {
+	width: 42px !important;
+	min-width: 42px !important;
+	border: none !important;
+	text-align: center;
+	font-size: 0.95rem;
+	font-weight: 500;
+	box-shadow: none !important;
+	-moz-appearance: textfield;
+	appearance: textfield;
+	padding: 0 !important;
+	margin: 0 !important;
+	background: transparent;
+	height: 36px;
+}
+
+.quick-view-modal .quantity.motta-qty-stepper .qty::-webkit-outer-spin-button,
+.quick-view-modal .quantity.motta-qty-stepper .qty::-webkit-inner-spin-button,
+.single-product .quantity.motta-qty-stepper .qty::-webkit-outer-spin-button,
+.single-product .quantity.motta-qty-stepper .qty::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* ---- Product detail cart row ---- */
+.single-product form.cart.ph-product-cart {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	margin-top: 20px;
+}
+
+.single-product form.cart.ph-product-cart .quantity.motta-qty-stepper {
+	flex: 0 0 auto;
+	margin-right: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+.single-product form.cart.ph-product-cart .single_add_to_cart_button {
+	flex: 1 1 180px;
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 48px;
+	/* padding: 12px 20px !important; */
+	background: var(--mt-color__primary, #3449ca) !important;
+	color: #fff !important;
+	border: none !important;
+	border-radius: 6px !important;
+	font-weight: 600;
+	box-shadow: none !important;
+	width: auto !important;
+	float: none !important;
+}
+
+.single-product form.cart.ph-product-cart .single_add_to_cart_button:hover {
+	background: var(--mt-color__primary--dark, #2e3fa3) !important;
+}
+
+.single-product form.cart.ph-product-cart .motta-buy-now-button {
+	flex: 1 1 180px;
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+	min-height: 48px;
+	/* padding: 12px 20px !important; */
+	background: #fff !important;
+	color: var(--mt-color__primary, #3449ca) !important;
+	border: 2px solid var(--mt-color__primary, #3449ca) !important;
+	border-radius: 6px !important;
+	font-weight: 600;
+	box-shadow: none !important;
+	width: auto !important;
+	float: none !important;
+}
+
+.single-product form.cart.ph-product-cart .motta-buy-now-button:hover {
+	background: #f5f7ff !important;
+}
+
+.wishlist-toggle.is-active .motta-svg-icon--wishlist,
+.wishlist-toggle.is-active {
+	color: #e11d48;
+}
+
+.wishlist-toggle.is-active .motta-svg-icon--wishlist path {
+	fill: currentColor;
+}

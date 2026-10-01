@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 96" width="380" height="96" role="img" aria-label="PelletCasa">
+  <defs>
+    <linearGradient id="flame" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#8a3b12"/>
+      <stop offset="55%" stop-color="#d9691f"/>
+      <stop offset="100%" stop-color="#f2a83e"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(6,10)">
+    <path fill="url(#flame)" d="M38 0c3 9-4 13-8 18-5 6-6 12-2 19 2-6 6-8 8-11 1 6-1 10-5 14 8-1 15-8 15-18 0-9-6-15-8-22z"/>
+    <path fill="#2f2a26" d="M20 33h36a5 5 0 0 1 5 5v30a5 5 0 0 1-5 5H20a5 5 0 0 1-5-5V38a5 5 0 0 1 5-5z"/>
+    <rect x="24" y="41" width="28" height="4" rx="2" fill="#f2a83e"/>
+    <rect x="24" y="49" width="20" height="4" rx="2" fill="#d9691f"/>
+  </g>
+  <text x="86" y="46" font-family="Outfit, Arial, sans-serif" font-size="32" font-weight="700" fill="#2f2a26">PelletCasa</text>
+  <text x="86" y="70" font-family="Outfit, Arial, sans-serif" font-size="14" letter-spacing="2.5" fill="#8a3b12">LEGNO &amp; PELLET</text>
+</svg>
