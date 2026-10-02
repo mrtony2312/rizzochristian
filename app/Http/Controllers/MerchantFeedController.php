@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Support\MerchantListing;
+use App\Support\MerchantCatalog;
 use Illuminate\Http\Response;
 
 class MerchantFeedController extends Controller
 {
-    public function google(): Response
+    public function google(MerchantCatalog $catalog): Response
     {
-        $products = Product::with(['category', 'images'])->orderBy('id')->get();
-
-        $items = $products
-            ->map(fn (Product $product) => new MerchantListing($product))
-            ->filter(fn (MerchantListing $listing) => $listing->imageUrl() !== null);
+        $items = $catalog->feedListings();
+        $shipping = $catalog->shipping();
 
         $xml = view('feeds.google-merchant', [
             'items' => $items,
+            'shipping' => $shipping,
             'updated' => now()->toAtomString(),
+            'feedTitle' => config('merchant.feed.title'),
+            'feedDescription' => $catalog->purchaseTermsHtml(),
         ])->render();
 
         return response($xml, 200, [

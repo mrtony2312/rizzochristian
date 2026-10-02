@@ -9,10 +9,12 @@ use App\Http\Controllers\MerchantFeedController;
 use App\Http\Controllers\OrderTrackingController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ShopController::class, 'home'])->name('home');
 Route::get('feed/google-merchant.xml', [MerchantFeedController::class, 'google'])->name('merchant.feed');
+Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('negozio/', [ShopController::class, 'shop'])->name('shop');
 Route::get('categoria-prodotto/{slug}/', [ShopController::class, 'category'])->name('category');

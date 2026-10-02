@@ -34,33 +34,54 @@ class MerchantListing
 
     public function brand(): string
     {
-        $text = (string) $this->product->description;
-
-        if (preg_match('/Marca\s*:\s*([^\r\n]+)/iu', $text, $matches) === 1) {
-            $brand = trim($matches[1]);
-            if ($brand !== '') {
-                return $brand;
-            }
+        $stored = trim((string) $this->product->brand);
+        if ($stored !== '') {
+            return $stored;
         }
 
-        foreach (['Pfeifer', 'RUF', 'MCZ', 'Ecopower', 'Edilkamin', 'Palazzetti', 'Extraflame', 'La Nordica'] as $known) {
-            if (stripos($this->product->name, $known) !== false) {
-                return $known;
-            }
+        $fromText = MerchantProductIdentifiers::brandFromText(
+            $this->product->description,
+            $this->product->name
+        );
+
+        if ($fromText !== null) {
+            return $fromText;
         }
 
-        return 'Rizzo Christian';
+        return (string) config('merchant.default_brand');
+    }
+
+    public function usesDefaultBrand(): bool
+    {
+        $stored = trim((string) $this->product->brand);
+        if ($stored !== '') {
+            return false;
+        }
+
+        return MerchantProductIdentifiers::brandFromText(
+            $this->product->description,
+            $this->product->name
+        ) === null;
     }
 
     public function gtin(): ?string
     {
-        $text = $this->product->description."\n".$this->product->short_description;
-
-        if (preg_match('/\b(?:EAN|GTIN)\s*[:#]?\s*(\d{8}|\d{12}|\d{13}|\d{14})\b/i', $text, $matches) !== 1) {
-            return null;
+        $stored = trim((string) $this->product->gtin);
+        if ($stored !== '' && MerchantProductIdentifiers::hasValidCheckDigit($stored)) {
+            return $stored;
         }
 
-        return $this->hasValidCheckDigit($matches[1]) ? $matches[1] : null;
+        return MerchantProductIdentifiers::gtinFromText(
+            $this->product->description,
+            $this->product->short_description
+        );
+    }
+
+    public function mpn(): ?string
+    {
+        $stored = trim((string) $this->product->mpn);
+
+        return $stored !== '' ? $stored : null;
     }
 
     public function price(): string
@@ -79,33 +100,37 @@ class MerchantListing
 
     public function availability(): string
     {
-        return $this->product->in_stock ? 'in_stock' : 'out_of_stock';
+        return $this->product->in_stock
+            ? (string) config('merchant.availability.in_stock')
+            : (string) config('merchant.availability.out_of_stock');
     }
 
     public function schemaAvailability(): string
     {
         return $this->product->in_stock
-            ? 'https://schema.org/InStock'
-            : 'https://schema.org/OutOfStock';
+            ? (string) config('merchant.availability.schema_in_stock')
+            : (string) config('merchant.availability.schema_out_of_stock');
     }
 
     public function googleProductCategory(): string
     {
-        return $this->product->category?->slug === 'stufe-a-pellet' ? '2639' : '625';
+        $map = config('merchant.google_product_category', []);
+        $slug = $this->product->category?->slug;
+
+        return (string) ($map[$slug] ?? $map['default'] ?? '625');
     }
 
     public function energyEfficiencyClass(): ?string
     {
-        $text = $this->product->description."\n".$this->product->short_description;
-
-        if (preg_match('/Classe di efficienza energetica\s*:?\s*(A\+{0,3}|[B-G])(?!\+)/iu', $text, $matches) !== 1) {
-            return null;
+        $stored = trim((string) $this->product->energy_efficiency_class);
+        if ($stored !== '') {
+            return $stored;
         }
 
-        $class = strtoupper($matches[1]);
-        $allowed = ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D', 'E', 'F', 'G'];
-
-        return in_array($class, $allowed, true) ? $class : null;
+        return MerchantProductIdentifiers::energyEfficiencyClassFromText(
+            $this->product->description,
+            $this->product->short_description
+        );
     }
 
     public function imageUrl(): ?string
@@ -134,20 +159,67 @@ class MerchantListing
         return $resolved;
     }
 
-    private function isUsableImage(string $relative): bool
+    public function link(): string
     {
-        return $relative !== ''
-            && ! $this->isLogo($relative)
-            && is_file(public_path($relative))
-            && filesize(public_path($relative)) > 0;
+        return route('product', $this->product->slug);
     }
 
-    private function isLogo(string $path): bool
+    public function currency(): string
     {
-        return str_contains($path, 'logo-rizzo')
-            || str_contains($path, 'logo.svg')
-            || str_contains($path, 'logo-brand')
-            || str_contains($path, 'logo-email');
+        return (string) config('merchant.market.currency');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function shippingDetails(): array
+    {
+        $shipping = app(MerchantCatalog::class)->shipping();
+
+        return [
+            '@type' => 'OfferShippingDetails',
+            'shippingRate' => [
+                '@type' => 'MonetaryAmount',
+                'value' => $shipping['price'],
+                'currency' => $shipping['currency'],
+            ],
+            'shippingDestination' => [
+                '@type' => 'DefinedRegion',
+                'addressCountry' => $shipping['country'],
+            ],
+            'deliveryTime' => [
+                '@type' => 'ShippingDeliveryTime',
+                'handlingTime' => [
+                    '@type' => 'QuantitativeValue',
+                    'minValue' => $shipping['handling_min'],
+                    'maxValue' => $shipping['handling_max'],
+                    'unitCode' => 'DAY',
+                ],
+                'transitTime' => [
+                    '@type' => 'QuantitativeValue',
+                    'minValue' => $shipping['transit_min'],
+                    'maxValue' => $shipping['transit_max'],
+                    'unitCode' => 'DAY',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function returnPolicy(): array
+    {
+        $returns = app(MerchantCatalog::class)->returns();
+
+        return [
+            '@type' => 'MerchantReturnPolicy',
+            'applicableCountry' => $returns['applicable_country'],
+            'returnPolicyCategory' => $returns['return_policy_category'],
+            'merchantReturnDays' => $returns['days'],
+            'returnMethod' => $returns['return_method'],
+            'returnFees' => $returns['return_fees'],
+        ];
     }
 
     /**
@@ -157,47 +229,14 @@ class MerchantListing
     {
         $offer = [
             '@type' => 'Offer',
-            'url' => route('product', $this->product->slug),
-            'priceCurrency' => 'EUR',
+            'url' => $this->link(),
+            'priceCurrency' => $this->currency(),
             'price' => $this->price(),
             'availability' => $this->schemaAvailability(),
             'itemCondition' => 'https://schema.org/NewCondition',
             'priceValidUntil' => now()->addYear()->toDateString(),
-            'shippingDetails' => [
-                '@type' => 'OfferShippingDetails',
-                'shippingRate' => [
-                    '@type' => 'MonetaryAmount',
-                    'value' => '0.00',
-                    'currency' => 'EUR',
-                ],
-                'shippingDestination' => [
-                    '@type' => 'DefinedRegion',
-                    'addressCountry' => 'IT',
-                ],
-                'deliveryTime' => [
-                    '@type' => 'ShippingDeliveryTime',
-                    'handlingTime' => [
-                        '@type' => 'QuantitativeValue',
-                        'minValue' => 1,
-                        'maxValue' => 2,
-                        'unitCode' => 'DAY',
-                    ],
-                    'transitTime' => [
-                        '@type' => 'QuantitativeValue',
-                        'minValue' => 1,
-                        'maxValue' => 2,
-                        'unitCode' => 'DAY',
-                    ],
-                ],
-            ],
-            'hasMerchantReturnPolicy' => [
-                '@type' => 'MerchantReturnPolicy',
-                'applicableCountry' => 'IT',
-                'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
-                'merchantReturnDays' => 14,
-                'returnMethod' => 'https://schema.org/ReturnByMail',
-                'returnFees' => 'https://schema.org/ReturnFeesCustomerResponsibility',
-            ],
+            'shippingDetails' => $this->shippingDetails(),
+            'hasMerchantReturnPolicy' => $this->returnPolicy(),
         ];
 
         $data = [
@@ -220,6 +259,10 @@ class MerchantListing
 
         if ($gtin = $this->gtin()) {
             $data['gtin'] = $gtin;
+        }
+
+        if ($mpn = $this->mpn()) {
+            $data['mpn'] = $mpn;
         }
 
         if ($class = $this->energyEfficiencyClass()) {
@@ -254,23 +297,24 @@ class MerchantListing
         };
     }
 
+    private function isUsableImage(string $relative): bool
+    {
+        return $relative !== ''
+            && ! $this->isLogo($relative)
+            && is_file(public_path($relative))
+            && filesize(public_path($relative)) > 0;
+    }
+
+    private function isLogo(string $path): bool
+    {
+        return str_contains($path, 'logo-rizzo')
+            || str_contains($path, 'logo.svg')
+            || str_contains($path, 'logo-brand')
+            || str_contains($path, 'logo-email');
+    }
+
     private function money(mixed $amount): string
     {
         return number_format((float) $amount, 2, '.', '');
-    }
-
-    private function hasValidCheckDigit(string $digits): bool
-    {
-        $check = (int) substr($digits, -1);
-        $body = substr($digits, 0, -1);
-        $sum = 0;
-        $factor = 3;
-
-        for ($i = strlen($body) - 1; $i >= 0; $i--) {
-            $sum += (int) $body[$i] * $factor;
-            $factor = $factor === 3 ? 1 : 3;
-        }
-
-        return ((10 - ($sum % 10)) % 10) === $check;
     }
 }

@@ -7,7 +7,7 @@
     <link rel="profile" href="https://gmpg.org/xfn/11">
 
 	
-<!-- Suchmaschinen-Optimierung durch Rank Math PRO - https://rankmath.com/ -->
+<!-- SEO -->
 <title>@yield('title', 'Rizzo Christian')</title>
 <meta name="description" content="@yield('meta_description', 'Rizzo Christian – pellet di legno, legna da ardere, bricchetti di legno e stufe a pellet.')"/>
 <meta name="robots" content="index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
@@ -61,10 +61,8 @@
     ]
 }
 </script>
-<!-- /Rank Math WordPress SEO Plugin -->
+<!-- /SEO -->
 
-<link rel="alternate" type="application/rss+xml" title="Rizzo Christian &raquo; Feed" href="/feed/" />
-<link rel="alternate" type="application/rss+xml" title="Rizzo Christian &raquo; Feed dei commenti" href="/comments/feed/" />
 <style id="wp-img-auto-sizes-contain-inline-css">
 img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 /*# sourceURL=wp-img-auto-sizes-contain-inline-css */

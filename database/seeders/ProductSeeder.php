@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Support\MerchantProductIdentifiers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
@@ -48,6 +49,10 @@ class ProductSeeder extends Seeder
                 'name' => $p['name'],
                 'slug' => $p['slug'],
                 'sku' => $p['sku'],
+                'brand' => $p['brand'] ?? MerchantProductIdentifiers::brandFromText($p['description'] ?? null, $p['name'] ?? null),
+                'gtin' => $p['gtin'] ?? MerchantProductIdentifiers::gtinFromText($p['description'] ?? null, $p['short_description'] ?? null),
+                'mpn' => $p['mpn'] ?? null,
+                'energy_efficiency_class' => $p['energy_efficiency_class'] ?? MerchantProductIdentifiers::energyEfficiencyClassFromText($p['description'] ?? null, $p['short_description'] ?? null),
                 'price' => $p['price'],
                 'regular_price' => $p['regular_price'],
                 'short_description' => $p['short_description'],
