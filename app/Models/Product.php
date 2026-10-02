@@ -15,7 +15,8 @@ class Product extends Model
 
     protected $fillable = [
         'category_id', 'name', 'slug', 'sku', 'brand', 'gtin', 'mpn', 'energy_efficiency_class',
-        'price', 'regular_price', 'short_description', 'description', 'attributes', 'image', 'in_stock',
+        'price', 'regular_price', 'sale_price_starts_at', 'sale_price_ends_at',
+        'short_description', 'description', 'attributes', 'image', 'in_stock',
     ];
 
     protected $casts = [
@@ -23,6 +24,8 @@ class Product extends Model
         'in_stock' => 'boolean',
         'price' => 'decimal:2',
         'regular_price' => 'decimal:2',
+        'sale_price_starts_at' => 'datetime',
+        'sale_price_ends_at' => 'datetime',
     ];
 
     public function category(): BelongsTo
@@ -35,9 +38,32 @@ class Product extends Model
         return $this->hasMany(ProductImage::class)->orderBy('sort_order');
     }
 
+    /**
+     * A Merchant / storefront sale exists only when the payable price is lower
+     * than regular_price AND a dated promo window is active (Europe/Rome).
+     * Permanent markdowns must set regular_price = price (no strikethrough).
+     */
     public function isOnSale(): bool
     {
-        return $this->regular_price && $this->price && $this->price < $this->regular_price;
+        if (! $this->regular_price || ! $this->price || $this->price >= $this->regular_price) {
+            return false;
+        }
+
+        if ($this->sale_price_starts_at === null && $this->sale_price_ends_at === null) {
+            return false;
+        }
+
+        $now = now(config('merchant.market.timezone', 'Europe/Rome'));
+
+        if ($this->sale_price_starts_at !== null && $now->lt($this->sale_price_starts_at)) {
+            return false;
+        }
+
+        if ($this->sale_price_ends_at !== null && $now->gt($this->sale_price_ends_at)) {
+            return false;
+        }
+
+        return true;
     }
 
     public function favoritedBy(): HasMany

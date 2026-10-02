@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Product;
+use Illuminate\Support\Carbon;
 
 class MerchantListing
 {
@@ -15,7 +16,7 @@ class MerchantListing
 
     public function title(): string
     {
-        $title = trim(preg_replace('/\s+/', ' ', $this->product->name) ?? '');
+        $title = trim(preg_replace('/\s+/', ' ', html_entity_decode($this->product->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')) ?? '');
 
         return mb_strlen($title) > 150 ? mb_substr($title, 0, 147).'...' : $title;
     }
@@ -23,7 +24,7 @@ class MerchantListing
     public function description(): string
     {
         $source = trim((string) ($this->product->short_description ?: $this->product->description));
-        $text = trim(preg_replace('/\s+/', ' ', strip_tags($source)) ?? '');
+        $text = trim(preg_replace('/\s+/', ' ', strip_tags(html_entity_decode($source, ENT_QUOTES | ENT_HTML5, 'UTF-8'))) ?? '');
 
         if ($text === '') {
             $text = $this->title();
@@ -32,56 +33,36 @@ class MerchantListing
         return mb_strlen($text) > 5000 ? mb_substr($text, 0, 4997).'...' : $text;
     }
 
-    public function brand(): string
+    public function brand(): ?string
     {
-        $stored = trim((string) $this->product->brand);
-        if ($stored !== '') {
-            return $stored;
-        }
-
-        $fromText = MerchantProductIdentifiers::brandFromText(
+        return MerchantProductIdentifiers::resolveBrand(
+            $this->product->brand,
             $this->product->description,
             $this->product->name
         );
-
-        if ($fromText !== null) {
-            return $fromText;
-        }
-
-        return (string) config('merchant.default_brand');
-    }
-
-    public function usesDefaultBrand(): bool
-    {
-        $stored = trim((string) $this->product->brand);
-        if ($stored !== '') {
-            return false;
-        }
-
-        return MerchantProductIdentifiers::brandFromText(
-            $this->product->description,
-            $this->product->name
-        ) === null;
     }
 
     public function gtin(): ?string
     {
-        $stored = trim((string) $this->product->gtin);
-        if ($stored !== '' && MerchantProductIdentifiers::hasValidCheckDigit($stored)) {
-            return $stored;
-        }
-
-        return MerchantProductIdentifiers::gtinFromText(
-            $this->product->description,
-            $this->product->short_description
+        return MerchantProductIdentifiers::resolveGtin(
+            $this->product->gtin,
+            $this->product->slug
         );
     }
 
     public function mpn(): ?string
     {
-        $stored = trim((string) $this->product->mpn);
+        return MerchantProductIdentifiers::resolveMpn(
+            $this->product->mpn,
+            $this->product->slug
+        );
+    }
 
-        return $stored !== '' ? $stored : null;
+    public function hasIdentifierExistsNo(): bool
+    {
+        return $this->brand() === null
+            && $this->gtin() === null
+            && $this->mpn() === null;
     }
 
     public function price(): string
@@ -96,6 +77,27 @@ class MerchantListing
         }
 
         return $this->money($this->product->regular_price);
+    }
+
+    public function salePriceEffectiveDate(): ?string
+    {
+        if (! $this->product->isOnSale()) {
+            return null;
+        }
+
+        $tz = config('merchant.market.timezone', 'Europe/Rome');
+        $start = $this->product->sale_price_starts_at
+            ? Carbon::parse($this->product->sale_price_starts_at)->timezone($tz)
+            : null;
+        $end = $this->product->sale_price_ends_at
+            ? Carbon::parse($this->product->sale_price_ends_at)->timezone($tz)
+            : null;
+
+        if ($start === null || $end === null) {
+            return null;
+        }
+
+        return $start->format('Y-m-d\TH:iO').'/'.$end->format('Y-m-d\TH:iO');
     }
 
     public function availability(): string
@@ -138,14 +140,14 @@ class MerchantListing
         $relative = ltrim(str_replace('\\', '/', (string) $this->product->image), '/');
 
         if ($this->isUsableImage($relative)) {
-            return asset($relative);
+            return $this->absoluteHttps(asset($relative));
         }
 
         if ($this->product->relationLoaded('images')) {
             foreach ($this->product->images as $image) {
                 $path = ltrim(str_replace('\\', '/', (string) $image->path), '/');
                 if ($this->isUsableImage($path)) {
-                    return asset($path);
+                    return $this->absoluteHttps(asset($path));
                 }
             }
         }
@@ -156,12 +158,12 @@ class MerchantListing
             return null;
         }
 
-        return $resolved;
+        return $this->absoluteHttps($resolved);
     }
 
     public function link(): string
     {
-        return route('product', $this->product->slug);
+        return $this->absoluteHttps(route('product', $this->product->slug)) ?? route('product', $this->product->slug);
     }
 
     public function currency(): string
@@ -234,10 +236,31 @@ class MerchantListing
             'price' => $this->price(),
             'availability' => $this->schemaAvailability(),
             'itemCondition' => 'https://schema.org/NewCondition',
-            'priceValidUntil' => now()->addYear()->toDateString(),
             'shippingDetails' => $this->shippingDetails(),
             'hasMerchantReturnPolicy' => $this->returnPolicy(),
         ];
+
+        if ($this->product->isOnSale() && $this->regularPrice() !== null) {
+            $offer['priceSpecification'] = [
+                [
+                    '@type' => 'UnitPriceSpecification',
+                    'priceType' => 'https://schema.org/StrikethroughPrice',
+                    'price' => $this->regularPrice(),
+                    'priceCurrency' => $this->currency(),
+                ],
+                [
+                    '@type' => 'UnitPriceSpecification',
+                    'price' => $this->price(),
+                    'priceCurrency' => $this->currency(),
+                ],
+            ];
+
+            if ($this->product->sale_price_ends_at) {
+                $offer['priceValidUntil'] = $this->product->sale_price_ends_at
+                    ->timezone(config('merchant.market.timezone', 'Europe/Rome'))
+                    ->toDateString();
+            }
+        }
 
         $data = [
             '@context' => 'https://schema.org',
@@ -245,12 +268,15 @@ class MerchantListing
             'name' => $this->title(),
             'description' => $this->description(),
             'sku' => $this->id(),
-            'brand' => [
-                '@type' => 'Brand',
-                'name' => $this->brand(),
-            ],
             'offers' => $offer,
         ];
+
+        if ($brand = $this->brand()) {
+            $data['brand'] = [
+                '@type' => 'Brand',
+                'name' => $brand,
+            ];
+        }
 
         $image = $this->imageUrl();
         if ($image !== null) {
@@ -278,6 +304,27 @@ class MerchantListing
         }
 
         return $data;
+    }
+
+    private function absoluteHttps(?string $url): ?string
+    {
+        if ($url === null || $url === '') {
+            return null;
+        }
+
+        if (str_starts_with($url, '//')) {
+            $url = 'https:'.$url;
+        }
+
+        if (str_starts_with($url, 'http://')) {
+            $url = 'https://'.substr($url, strlen('http://'));
+        }
+
+        if (str_starts_with($url, '/')) {
+            $url = rtrim((string) config('app.url'), '/').$url;
+        }
+
+        return $url;
     }
 
     private function energyEfficiencyCategoryUrl(string $class): ?string

@@ -28,14 +28,21 @@ class MerchantSsotTest extends TestCase
         $category = Category::factory()->create(['slug' => 'pellet-di-legno']);
         $product = Product::factory()->create([
             'category_id' => $category->id,
+            'slug' => 'pfeifer-confirmed-gtin',
             'brand' => 'Pfeifer',
-            'gtin' => '4006381333931',
+            'gtin' => null,
             'price' => 100,
             'regular_price' => 100,
             'in_stock' => true,
         ]);
 
-        $listing = new MerchantListing($product);
+        config([
+            'merchant.confirmed_gtins' => [
+                'pfeifer-confirmed-gtin' => '4006381333931',
+            ],
+        ]);
+
+        $listing = new MerchantListing($product->fresh());
         $schema = $listing->schema();
 
         $this->assertSame('Pfeifer', $schema['brand']['name']);
@@ -48,6 +55,24 @@ class MerchantSsotTest extends TestCase
             config('merchant.returns.days'),
             $schema['offers']['hasMerchantReturnPolicy']['merchantReturnDays']
         );
+        $this->assertArrayNotHasKey('priceValidUntil', $schema['offers']);
+    }
+
+    public function test_undated_markdown_is_not_treated_as_a_sale(): void
+    {
+        $product = Product::factory()->create([
+            'price' => 82,
+            'regular_price' => 100,
+            'sale_price_starts_at' => null,
+            'sale_price_ends_at' => null,
+            'brand' => 'MCZ',
+            'name' => 'MCZ Ego test',
+        ]);
+
+        $this->assertFalse($product->isOnSale());
+        $listing = new MerchantListing($product);
+        $this->assertNull($listing->regularPrice());
+        $this->assertSame('82.00', $listing->price());
     }
 
     public function test_sitemap_lists_products_and_robots_points_to_it(): void

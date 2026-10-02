@@ -14,20 +14,25 @@
 		<g:image_link>{{ $item->imageUrl() }}</g:image_link>
 		<g:availability>{{ $item->availability() }}</g:availability>
 		<g:condition>new</g:condition>
+		@if ($item->brand())
 		<g:brand>{{ $item->brand() }}</g:brand>
+		@endif
 		@if ($item->regularPrice())
 		<g:price>{{ $item->regularPrice() }} {{ $item->currency() }}</g:price>
 		<g:sale_price>{{ $item->price() }} {{ $item->currency() }}</g:sale_price>
+		@if ($item->salePriceEffectiveDate())
+		<g:sale_price_effective_date>{{ $item->salePriceEffectiveDate() }}</g:sale_price_effective_date>
+		@endif
 		@else
 		<g:price>{{ $item->price() }} {{ $item->currency() }}</g:price>
 		@endif
 		@if ($item->gtin())
 		<g:gtin>{{ $item->gtin() }}</g:gtin>
-		<g:identifier_exists>yes</g:identifier_exists>
-		@elseif ($item->mpn())
+		@endif
+		@if ($item->mpn())
 		<g:mpn>{{ $item->mpn() }}</g:mpn>
-		<g:identifier_exists>yes</g:identifier_exists>
-		@else
+		@endif
+		@if ($item->hasIdentifierExistsNo())
 		<g:identifier_exists>no</g:identifier_exists>
 		@endif
 		<g:google_product_category>{{ $item->googleProductCategory() }}</g:google_product_category>

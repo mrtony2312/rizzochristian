@@ -95,8 +95,9 @@ class MerchantCenterComplianceTest extends TestCase
             'category_id' => $category->id,
             'name' => 'MCZ Stream stufa a pellet',
             'slug' => 'mcz-stream',
+            'brand' => 'MCZ',
             'price' => 1200,
-            'regular_price' => 1500,
+            'regular_price' => 1200,
             'image' => $image,
             'description' => 'Classe di efficienza energetica: A+',
             'in_stock' => true,
@@ -108,8 +109,9 @@ class MerchantCenterComplianceTest extends TestCase
         $response->assertHeader('Content-Type', 'application/xml; charset=UTF-8');
         $response->assertSee('<g:id>PC-'.$product->id.'</g:id>', false);
         $response->assertSee('<g:brand>MCZ</g:brand>', false);
-        $response->assertSee('<g:price>1500.00 EUR</g:price>', false);
-        $response->assertSee('<g:sale_price>1200.00 EUR</g:sale_price>', false);
+        $response->assertSee('<g:price>1200.00 EUR</g:price>', false);
+        $response->assertDontSee('<g:sale_price>', false);
+        $response->assertDontSee('<g:identifier_exists>no</g:identifier_exists>', false);
         $response->assertSee('<g:google_product_category>2639</g:google_product_category>', false);
         $response->assertSee('<g:country>IT</g:country>', false);
         $response->assertSee('<g:price>0.00 EUR</g:price>', false);
@@ -117,14 +119,38 @@ class MerchantCenterComplianceTest extends TestCase
         $response->assertSee('<g:max_handling_time>2</g:max_handling_time>', false);
         $response->assertSee('<g:min_transit_time>1</g:min_transit_time>', false);
         $response->assertSee('<g:max_transit_time>2</g:max_transit_time>', false);
-        $response->assertSee('<g:identifier_exists>no</g:identifier_exists>', false);
         $response->assertSee('<g:energy_efficiency_class>A+</g:energy_efficiency_class>', false);
         $response->assertDontSee('<g:mpn>', false);
+        $response->assertDontSee('<g:brand>Rizzo Christian</g:brand>', false);
 
         $this->get(route('product', $product->slug))
             ->assertOk()
             ->assertSee('Classe di efficienza energetica: A+', false)
             ->assertSee('EUEnergyEfficiencyCategoryA1Plus', false);
+    }
+
+    public function test_feed_omits_brand_fallback_and_uses_identifier_exists_only_without_brand(): void
+    {
+        $image = 'wp-content/uploads/2026/08/s-l1600-1.webp';
+        if (! is_file(public_path($image))) {
+            $this->markTestSkipped('Product image fixture is not present.');
+        }
+
+        Product::factory()->create([
+            'name' => 'Legna da ardere di faggio 50 cm',
+            'slug' => 'legna-faggio-test',
+            'brand' => null,
+            'price' => 100,
+            'regular_price' => 100,
+            'image' => $image,
+            'in_stock' => true,
+        ]);
+
+        $this->get(route('merchant.feed'))
+            ->assertOk()
+            ->assertSee('<g:identifier_exists>no</g:identifier_exists>', false)
+            ->assertDontSee('<g:brand>Rizzo Christian</g:brand>', false)
+            ->assertDontSee('<g:brand>Boutique</g:brand>', false);
     }
 
     public function test_old_primex_weight_slug_redirects_to_the_corrected_product(): void

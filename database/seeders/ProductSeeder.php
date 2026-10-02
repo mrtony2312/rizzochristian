@@ -44,17 +44,25 @@ class ProductSeeder extends Seeder
                 }
             }
 
+            $brand = MerchantProductIdentifiers::resolveBrand(
+                $p['brand'] ?? null,
+                $p['description'] ?? null,
+                $p['name'] ?? null
+            );
+
             $attributes = [
                 'category_id' => $categoryId,
                 'name' => $p['name'],
                 'slug' => $p['slug'],
                 'sku' => $p['sku'],
-                'brand' => $p['brand'] ?? MerchantProductIdentifiers::brandFromText($p['description'] ?? null, $p['name'] ?? null),
-                'gtin' => $p['gtin'] ?? MerchantProductIdentifiers::gtinFromText($p['description'] ?? null, $p['short_description'] ?? null),
-                'mpn' => $p['mpn'] ?? null,
+                'brand' => $brand,
+                'gtin' => MerchantProductIdentifiers::resolveGtin($p['gtin'] ?? null, $p['slug']),
+                'mpn' => MerchantProductIdentifiers::resolveMpn($p['mpn'] ?? null, $p['slug']),
                 'energy_efficiency_class' => $p['energy_efficiency_class'] ?? MerchantProductIdentifiers::energyEfficiencyClassFromText($p['description'] ?? null, $p['short_description'] ?? null),
                 'price' => $p['price'],
-                'regular_price' => $p['regular_price'],
+                'regular_price' => $p['regular_price'] ?? $p['price'],
+                'sale_price_starts_at' => $p['sale_price_starts_at'] ?? null,
+                'sale_price_ends_at' => $p['sale_price_ends_at'] ?? null,
                 'short_description' => $p['short_description'],
                 'description' => $p['description'],
                 'attributes' => $p['attributes'],

@@ -77,45 +77,78 @@ class MerchantValidator
             $issues[] = $this->issue($listing, 'title', '', 'non-empty', 'CRITICAL', 'Empty product title.', 'Set the product name.');
         }
 
-        if ($listing->usesDefaultBrand()) {
+        $storedBrand = trim((string) $product->brand);
+        if ($storedBrand !== '' && MerchantProductIdentifiers::isForbiddenBrand($storedBrand)) {
             $issues[] = $this->issue(
                 $listing,
                 'brand',
-                $listing->brand(),
-                'manufacturer or confirmed private label',
-                'WARNING',
-                'Brand falls back to the shop default brand.',
-                'Set products.brand to the real manufacturer when known; do not invent a brand.'
+                $storedBrand,
+                'manufacturer brand only',
+                'CRITICAL',
+                'Shop/reseller brand is forbidden in g:brand.',
+                'Clear the brand or set the real manufacturer. Never use Rizzo Christian / Boutique.'
             );
         }
 
-        if ($listing->gtin() === null && $listing->mpn() === null) {
+        if ($product->category?->slug === 'stufe-a-pellet' && $listing->brand() === null) {
+            $issues[] = $this->issue(
+                $listing,
+                'brand',
+                '',
+                'manufacturer brand for pellet stoves',
+                'IMPORTANT',
+                'Pellet stove without manufacturer brand.',
+                'Set brand from the stove manufacturer (e.g. MCZ).'
+            );
+        }
+
+        if ($listing->gtin() === null && $listing->mpn() === null && $listing->brand() === null) {
             $issues[] = $this->issue(
                 $listing,
                 'identifiers',
                 'identifier_exists=no',
-                'GTIN and/or MPN when available',
+                'brand and/or GTIN/MPN when available',
                 'WARNING',
-                'No GTIN/MPN on file.',
-                'Add a real GTIN/MPN only when known; otherwise keep identifier_exists=no.'
+                'No brand/GTIN/MPN — feed will send identifier_exists=no.',
+                'Add a real manufacturer brand and confirmed GTIN/MPN only when known.'
+            );
+        } elseif ($listing->gtin() === null && $listing->mpn() === null) {
+            $issues[] = $this->issue(
+                $listing,
+                'identifiers',
+                'brand without GTIN/MPN',
+                'confirmed GTIN or MPN when available',
+                'WARNING',
+                'Brand present but no confirmed GTIN/MPN.',
+                'Confirm packaging EAN/MPN with the supplier; do not invent codes.'
             );
         }
 
-        if ($product->isOnSale()) {
+        if ((float) $product->price < (float) $product->regular_price
+            && $product->sale_price_starts_at === null
+            && $product->sale_price_ends_at === null) {
             $issues[] = $this->issue(
                 $listing,
                 'sale_price',
-                $listing->price().' / '.$listing->regularPrice(),
-                'credible sale vs regular price',
-                'WARNING',
-                'Product is on sale.',
-                'Confirm the regular_price is a genuine prior/reference price, not an inflated strike-through.'
+                $product->price.' / '.$product->regular_price,
+                'dated promo or regular_price = price',
+                'CRITICAL',
+                'Undated strikethrough price (permanent markdown).',
+                'Either set sale_price_starts_at/ends_at for a real ≤30-day promo, or set regular_price = payable price.'
             );
         }
 
         $currency = $listing->currency();
         if ($currency !== 'EUR') {
             $issues[] = $this->issue($listing, 'currency', $currency, 'EUR for IT market', 'IMPORTANT', 'Unexpected currency for IT market.', 'Use EUR for the Italian Merchant market.');
+        }
+
+        if ($listing->imageUrl() && ! str_starts_with((string) $listing->imageUrl(), 'https://')) {
+            $issues[] = $this->issue($listing, 'image_link', (string) $listing->imageUrl(), 'https absolute URL', 'CRITICAL', 'Image URL is not HTTPS absolute.', 'Serve images over https://rizzochristian.com.');
+        }
+
+        if (! str_starts_with($listing->link(), 'https://')) {
+            $issues[] = $this->issue($listing, 'link', $listing->link(), 'https absolute URL', 'CRITICAL', 'Product link is not HTTPS absolute.', 'Set APP_URL to https://rizzochristian.com.');
         }
 
         return $issues;
