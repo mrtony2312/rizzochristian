@@ -120,9 +120,9 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 <link rel='stylesheet' id='cart-panel-css' href="{{ asset('css/cart-panel.css') }}?ver=3" media='all' />
 <link rel='stylesheet' id='catalog-css' href="{{ asset('css/catalog.css') }}?ver=7" media='all' />
 <link rel='stylesheet' id='checkout-css' href="{{ asset('css/checkout.css') }}?ver=1" media='all' />
-<link rel='stylesheet' id='pages-css' href="{{ asset('css/pages.css') }}?ver=6" media='all' />
+<link rel='stylesheet' id='pages-css' href="{{ asset('css/pages.css') }}?ver=7" media='all' />
 <style id="motta-inline-css">
-body{}body, .block-editor .editor-styles-wrapper{font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;}.header-logo > a {display:inline-flex;align-items:center;line-height:0;max-width:100%;}.header-logo > a img, .header-logo > a svg {width:auto;height:clamp(64px, 9vw, 108px);max-width:min(120px, 34vw);object-fit:contain;}.site-header__mobile .header-logo > a img,.site-header__mobile .header-logo > a svg {width:auto;height:clamp(56px, 16vw, 80px);max-width:min(92px, 28vw);object-fit:contain;}
+body{}body, .block-editor .editor-styles-wrapper{font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;}.header-logo > a {display:inline-flex;align-items:center;line-height:0;max-width:100%;}.header-logo > a img, .header-logo > a svg {width:auto;height:clamp(52px, 7.5vw, 88px);max-width:min(100px, 28vw);object-fit:contain;}.site-header__mobile .header-logo > a img,.site-header__mobile .header-logo > a svg {width:auto;height:clamp(40px, 11vw, 56px);max-width:min(68px, 22vw);object-fit:contain;}
 .site-header__mobile .header-mobile-main .site-header__container,
 .site-header__mobile .header-mobile-sticky .site-header__container{position:relative;display:flex;align-items:center;justify-content:space-between;}
 .site-header__mobile .header-mobile-main .header-left-items,

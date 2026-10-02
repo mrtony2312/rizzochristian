@@ -139,7 +139,7 @@ class MerchantCenterComplianceTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('images/logo-rizzo.png', false)
-            ->assertSee('clamp(64px, 9vw, 108px)', false)
+            ->assertSee('clamp(52px, 7.5vw, 88px)', false)
             ->assertSee('Le nostre politiche', false)
             ->assertSee('/spedizione-e-consegna/', false)
             ->assertDontSee('Unsere Richtlinien', false)

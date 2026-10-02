@@ -52,7 +52,7 @@
 
 .auth-logo img {
 	display: block;
-	width: min(168px, 52vw);
+	width: min(140px, 44vw);
 	height: auto;
 }
 
