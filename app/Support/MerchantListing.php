@@ -163,7 +163,44 @@ class MerchantListing
 
     public function link(): string
     {
-        return $this->absoluteHttps(route('product', $this->product->slug)) ?? route('product', $this->product->slug);
+        return rtrim($this->absoluteHttps(route('product', $this->product->slug)) ?? route('product', $this->product->slug), '/');
+    }
+
+    /**
+     * Extra product images for g:additional_image_link (HTTPS, non-logo).
+     *
+     * @return list<string>
+     */
+    public function additionalImageUrls(): array
+    {
+        $primary = $this->imageUrl();
+        $urls = [];
+
+        if ($this->product->relationLoaded('images')) {
+            foreach ($this->product->images as $image) {
+                $path = ltrim(str_replace('\\', '/', (string) $image->path), '/');
+                if (! $this->isUsableImage($path)) {
+                    continue;
+                }
+                $url = $this->absoluteHttps(asset($path));
+                if ($url === null || $url === $primary || in_array($url, $urls, true)) {
+                    continue;
+                }
+                $urls[] = $url;
+                if (count($urls) >= 10) {
+                    break;
+                }
+            }
+        }
+
+        return $urls;
+    }
+
+    public function productType(): ?string
+    {
+        $name = trim((string) ($this->product->category?->name ?? ''));
+
+        return $name !== '' ? $name : null;
     }
 
     public function currency(): string

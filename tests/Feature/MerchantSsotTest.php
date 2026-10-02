@@ -116,4 +116,20 @@ class MerchantSsotTest extends TestCase
             ->assertSee('1–2 giorni lavorativi', false)
             ->assertSee('2–4 giorni lavorativi', false);
     }
+
+    public function test_product_page_does_not_show_fake_zero_ratings(): void
+    {
+        $product = Product::factory()->create([
+            'slug' => 'no-fake-reviews',
+            'price' => 100,
+            'regular_price' => 100,
+            'in_stock' => true,
+        ]);
+
+        $this->get(route('product', $product->slug))
+            ->assertOk()
+            ->assertDontSee('motta-product-rating__average-value', false)
+            ->assertDontSee('0 valutazioni', false)
+            ->assertDontSee('Recensioni (0)', false);
+    }
 }

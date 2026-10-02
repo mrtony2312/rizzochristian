@@ -96,6 +96,10 @@
 <p class="stock {{ $product->in_stock ? 'in-stock' : 'out-of-stock' }}">{{ $product->in_stock ? 'Disponibile' : 'Esaurito' }}</p>
 </div>
 @php($energyClass = (new \App\Support\MerchantListing($product))->energyEfficiencyClass())
+@php($merchantBrand = (new \App\Support\MerchantListing($product))->brand())
+@if ($merchantBrand)
+<p class="ph-product-brand">Marca: {{ $merchantBrand }}</p>
+@endif
 @if ($energyClass)
 <p class="ph-energy-class">Classe di efficienza energetica: {{ $energyClass }}</p>
 @endif
@@ -161,39 +165,8 @@
 					<a href="#tab-description" role="tab" aria-controls="tab-description">
 						Descrizione					</a>
 				</li>
-											<li role="presentation" class="reviews_tab" id="tab-title-reviews" role="tab" aria-controls="tab-reviews">
-					<a href="#tab-reviews" role="tab" aria-controls="tab-reviews">
-						Recensioni (0)					</a>
-				</li>
 									</ul>
 					<div class="woocommerce-Tabs-panel woocommerce-Tabs-panel--description panel entry-content wc-tab" id="tab-description" role="tabpanel" aria-labelledby="tab-title-description">@include('partials.product-description')</div>
-					<div class="woocommerce-Tabs-panel woocommerce-Tabs-panel--reviews panel entry-content wc-tab" id="tab-reviews" role="tabpanel" aria-labelledby="tab-title-reviews">
-				<a id="tab-panel-title-reviews" data-tab="tab-title-reviews" href="#tab-reviews"
-						class="motta-dropdown__title tab-title-reviews ">
-						Recensioni (0)						<span class="motta-svg-icon motta-svg-icon--plus icon-plus icon-noactive" ><svg width="24" height="24" aria-hidden="true" role="img" focusable="false" viewBox="0 0 32 32"><path d="M26.667 13.333h-8v-8h-5.333v8h-8v5.333h8v8h5.333v-8h8z"></path></svg></span><span class="motta-svg-icon motta-svg-icon--minus icon-minus icon-active" ><svg width="24" height="24" aria-hidden="true" role="img" focusable="false" viewBox="0 0 32 32"><path d="M26.667 13.333v5.333h-21.333v-5.333h21.333z"></path></svg></span>				</a>
-				<div class="motta-dropdown__content">
-					<div id="reviews" class="woocommerce-Reviews">
-	<div class="motta-product-rating"><div class="motta-product-rating__title">Valutazioni</div><div class="motta-product-rating__wrapper"><div class="motta-product-rating__heading">
-									<h3 class="motta-product-rating__average-value">0.0</h3>
-									<div class="motta-product-rating__rating-count">
-									
-									<div class="motta-product-rating__count">0 valutazioni</div>
-									</div>
-								</div>
-								<div class="motta-product-rating__bar"><div class="star-item 5-stars"><div class="slabel">5 <span class="motta-svg-icon motta-svg-icon--star" ><svg width="24" height="24" aria-hidden="true" role="img" focusable="false" viewBox="0 0 32 32"><path d="M16 1.333l3.467 11.2h11.2l-9.067 6.933 3.467 11.2-9.067-6.933-9.067 6.933 3.467-11.2-9.067-6.933h11.2z"></path></svg></span></div><div class="sbar"><div class="bar-content"><span class="bar-star bar-star--5 "></span></div></div><div class="svalue">0</div></div><div class="star-item 4-stars"><div class="slabel">4 <span class="motta-svg-icon motta-svg-icon--star" ><svg width="24" height="24" aria-hidden="true" role="img" focusable="false" viewBox="0 0 32 32"><path d="M16 1.333l3.467 11.2h11.2l-9.067 6.933 3.467 11.2-9.067-6.933-9.067 6.933 3.467-11.2-9.067-6.933h11.2z"></path></svg></span></div><div class="sbar"><div class="bar-content"><span class="bar-star bar-star--4 "></span></div></div><div class="svalue">0</div></div><div class="star-item 3-stars"><div class="slabel">3 <span class="motta-svg-icon motta-svg-icon--star" ><svg width="24" height="24" aria-hidden="true" role="img" focusable="false" viewBox="0 0 32 32"><path d="M16 1.333l3.467 11.2h11.2l-9.067 6.933 3.467 11.2-9.067-6.933-9.067 6.933 3.467-11.2-9.067-6.933h11.2z"></path></svg></span></div><div class="sbar"><div class="bar-content"><span class="bar-star bar-star--3 "></span></div></div><div class="svalue">0</div></div><div class="star-item 2-stars"><div class="slabel">2 <span class="motta-svg-icon motta-svg-icon--star" ><svg width="24" height="24" aria-hidden="true" role="img" focusable="false" viewBox="0 0 32 32"><path d="M16 1.333l3.467 11.2h11.2l-9.067 6.933 3.467 11.2-9.067-6.933-9.067 6.933 3.467-11.2-9.067-6.933h11.2z"></path></svg></span></div><div class="sbar"><div class="bar-content"><span class="bar-star bar-star--2 "></span></div></div><div class="svalue">0</div></div><div class="star-item 1-stars"><div class="slabel">1 <span class="motta-svg-icon motta-svg-icon--star" ><svg width="24" height="24" aria-hidden="true" role="img" focusable="false" viewBox="0 0 32 32"><path d="M16 1.333l3.467 11.2h11.2l-9.067 6.933 3.467 11.2-9.067-6.933-9.067 6.933 3.467-11.2-9.067-6.933h11.2z"></path></svg></span></div><div class="sbar"><div class="bar-content"><span class="bar-star bar-star--1 "></span></div></div><div class="svalue">0</div></div></div>
-								<div class="motta-product-rating__summary">
-									<h4>Recensisci questo prodotto</h4>
-									<p>Condividi la tua opinione con altri clienti</p>
-								</div></div></div>	<div id="comments">
-		<h2 class="woocommerce-Reviews-title">
-			Recensioni		</h2>
-
-					<p class="woocommerce-noreviews">Non ci sono ancora recensioni.</p>
-			</div>
-	<div class="clear"></div>
-</div>
-				</div>
-			</div>
 		
 			</div>
 

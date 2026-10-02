@@ -12,10 +12,16 @@
 		<g:description>{{ $item->description() }}</g:description>
 		<g:link>{{ $item->link() }}</g:link>
 		<g:image_link>{{ $item->imageUrl() }}</g:image_link>
+		@foreach ($item->additionalImageUrls() as $additionalImage)
+		<g:additional_image_link>{{ $additionalImage }}</g:additional_image_link>
+		@endforeach
 		<g:availability>{{ $item->availability() }}</g:availability>
 		<g:condition>new</g:condition>
 		@if ($item->brand())
 		<g:brand>{{ $item->brand() }}</g:brand>
+		@endif
+		@if ($item->productType())
+		<g:product_type>{{ $item->productType() }}</g:product_type>
 		@endif
 		@if ($item->regularPrice())
 		<g:price>{{ $item->regularPrice() }} {{ $item->currency() }}</g:price>

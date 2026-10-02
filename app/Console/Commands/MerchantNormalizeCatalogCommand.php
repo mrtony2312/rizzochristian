@@ -30,6 +30,10 @@ class MerchantNormalizeCatalogCommand extends Command
             $gtin = MerchantProductIdentifiers::resolveGtin($product->gtin, $product->slug);
             $mpn = MerchantProductIdentifiers::resolveMpn($product->mpn, $product->slug);
 
+            $cleanName = html_entity_decode((string) $product->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $cleanShort = html_entity_decode((string) $product->short_description, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $cleanDescription = html_entity_decode((string) $product->description, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
             // Permanent ~18% markdowns are not dated Merchant sales.
             $payable = $product->price;
             $regular = $payable;
@@ -37,6 +41,9 @@ class MerchantNormalizeCatalogCommand extends Command
             $saleEnd = null;
 
             $product->fill([
+                'name' => $cleanName !== '' ? $cleanName : $product->name,
+                'short_description' => $cleanShort !== '' ? $cleanShort : $product->short_description,
+                'description' => $cleanDescription !== '' ? $cleanDescription : $product->description,
                 'brand' => $brand,
                 'gtin' => $gtin,
                 'mpn' => $mpn,

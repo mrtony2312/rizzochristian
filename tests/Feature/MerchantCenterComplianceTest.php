@@ -65,17 +65,17 @@ class MerchantCenterComplianceTest extends TestCase
 
     public function test_payment_and_return_pages_match_the_checkout(): void
     {
-        $this->get('/metodi-di-pagamento/')
+        $this->get('/metodi-di-pagamento')
             ->assertOk()
             ->assertSee('bonifico anticipato', false)
             ->assertDontSee('Carta di credito', false);
 
-        $this->get('/resi-e-rimborsi/')
+        $this->get('/resi-e-rimborsi')
             ->assertOk()
             ->assertSee('14 giorni', false)
             ->assertSee('spese di restituzione sono a carico del cliente', false);
 
-        $this->get('/spedizione-e-consegna/')
+        $this->get('/spedizione-e-consegna')
             ->assertOk()
             ->assertSee('1–2 giorni lavorativi', false)
             ->assertSee('2–4 giorni lavorativi', false)
@@ -155,7 +155,7 @@ class MerchantCenterComplianceTest extends TestCase
 
     public function test_old_primex_weight_slug_redirects_to_the_corrected_product(): void
     {
-        $this->get('/prodotto/pellet-di-qualita-primex-premium-990-kg/')
+        $this->get('/prodotto/pellet-di-qualita-primex-premium-990-kg')
             ->assertStatus(301)
             ->assertRedirect(route('product', 'pellet-di-qualita-primex-premium-975-kg'));
     }
@@ -167,7 +167,7 @@ class MerchantCenterComplianceTest extends TestCase
             ->assertSee('images/logo-rizzo.png', false)
             ->assertSee('clamp(52px, 7.5vw, 88px)', false)
             ->assertSee('Le nostre politiche', false)
-            ->assertSee('/spedizione-e-consegna/', false)
+            ->assertSee('/spedizione-e-consegna', false)
             ->assertDontSee('Unsere Richtlinien', false)
             ->assertDontSee('Garanzia sul prezzo', false);
     }
