@@ -18,8 +18,12 @@
 
 <div id="site-content" class="site-content">
 	<div class="container clearfix ph-checkout">
+		@if (session('error'))
+			<div class="ph-checkout__flash" role="alert">{{ session('error') }}</div>
+		@endif
+
 		@if ($errors->any())
-			<div class="woocommerce-error ph-checkout__errors">
+			<div class="woocommerce-error ph-checkout__errors" role="alert">
 				<ul>
 					@foreach ($errors->all() as $error)
 						<li>{{ $error }}</li>
@@ -35,8 +39,8 @@
 					<section class="ph-checkout__section">
 						<h2 class="ph-checkout__section-title">Informazioni di contatto</h2>
 						<label class="ph-field">
-							<span class="ph-field__label">Indirizzo e-mail</span>
-							<input type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" required autocomplete="email">
+							<span class="ph-field__label">Indirizzo e-mail *</span>
+							<input type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" required autocomplete="email" inputmode="email">
 						</label>
 						<p class="ph-checkout__guest-note">Stai effettuando l’ordine come ospite.</p>
 					</section>
@@ -45,8 +49,8 @@
 						<h2 class="ph-checkout__section-title">Indirizzo di fatturazione</h2>
 
 						<label class="ph-field">
-							<span class="ph-field__label">Paese</span>
-							<select name="country" required>
+							<span class="ph-field__label">Paese *</span>
+							<select name="country" required autocomplete="country">
 								@foreach (config('billing.countries') as $code => $label)
 									<option value="{{ $code }}" {{ old('country', 'IT') === $code ? 'selected' : '' }}>{{ $label }}</option>
 								@endforeach
@@ -55,11 +59,11 @@
 
 						<div class="ph-field-row">
 							<label class="ph-field">
-								<span class="ph-field__label">Nome</span>
+								<span class="ph-field__label">Nome *</span>
 								<input type="text" name="first_name" value="{{ old('first_name') }}" required autocomplete="given-name">
 							</label>
 							<label class="ph-field">
-								<span class="ph-field__label">Cognome</span>
+								<span class="ph-field__label">Cognome *</span>
 								<input type="text" name="last_name" value="{{ old('last_name') }}" required autocomplete="family-name">
 							</label>
 						</div>
@@ -70,7 +74,7 @@
 						</label>
 
 						<label class="ph-field">
-							<span class="ph-field__label">Indirizzo</span>
+							<span class="ph-field__label">Indirizzo *</span>
 							<input type="text" name="address" value="{{ old('address') }}" required autocomplete="address-line1">
 						</label>
 
@@ -86,11 +90,11 @@
 
 						<div class="ph-field-row">
 							<label class="ph-field">
-								<span class="ph-field__label">CAP</span>
-								<input type="text" name="postal_code" value="{{ old('postal_code') }}" required autocomplete="postal-code">
+								<span class="ph-field__label">CAP *</span>
+								<input type="text" name="postal_code" value="{{ old('postal_code') }}" required autocomplete="postal-code" inputmode="numeric">
 							</label>
 							<label class="ph-field">
-								<span class="ph-field__label">Città</span>
+								<span class="ph-field__label">Città *</span>
 								<input type="text" name="city" value="{{ old('city') }}" required autocomplete="address-level2">
 							</label>
 						</div>
@@ -98,7 +102,7 @@
 						<div class="ph-field-row">
 							<label class="ph-field">
 								<span class="ph-field__label">Provincia (opzionale)</span>
-								<select name="state">
+								<select name="state" autocomplete="address-level1">
 									<option value="">—</option>
 									@foreach($provinces as $code => $label)
 										<option value="{{ $code }}" {{ old('state') === $code ? 'selected' : '' }}>{{ $label }}</option>
@@ -107,7 +111,7 @@
 							</label>
 							<label class="ph-field">
 								<span class="ph-field__label">Telefono</span>
-								<input type="tel" name="phone" value="{{ old('phone') }}" autocomplete="tel">
+								<input type="tel" name="phone" value="{{ old('phone') }}" autocomplete="tel" inputmode="tel">
 							</label>
 						</div>
 					</section>
@@ -127,17 +131,19 @@
 							<span>Aggiungi una nota al tuo ordine</span>
 						</label>
 						<div class="ph-checkout__notes" data-notes-wrap @if(! old('notes') && ! old('add_note')) hidden @endif>
-							<textarea name="notes" rows="4" placeholder="Note sul tuo ordine">{{ old('notes') }}</textarea>
+							<textarea name="notes" rows="3" placeholder="Note sul tuo ordine">{{ old('notes') }}</textarea>
 						</div>
 
 						<p class="ph-checkout__legal">
 							Continuando, accetti i nostri
-							<a href="{{ url('/termini-e-condizioni/') }}">Termini e condizioni</a>
+							<a href="{{ url('/termini-e-condizioni') }}">Termini e condizioni</a>
 							e l’
-							<a href="{{ url('/privacy/') }}">Informativa sulla privacy</a>.
+							<a href="{{ url('/privacy') }}">Informativa sulla privacy</a>.
 						</p>
 
-						<button type="submit" class="ph-checkout__submit">Ordina con obbligo di pagamento</button>
+						<button type="submit" class="ph-checkout__submit ph-checkout__submit--desktop" data-checkout-submit>
+							Ordina con obbligo di pagamento
+						</button>
 					</section>
 				</div>
 
@@ -152,7 +158,7 @@
 								@php($saved = $product->isOnSale() ? ($product->regular_price - $product->price) * $qty : 0)
 								<li class="ph-checkout__item">
 									<div class="ph-checkout__item-thumb">
-										<img src="{{ $product->imageUrl() }}" alt="{{ $product->name }}" width="64" height="64" loading="lazy">
+										<img src="{{ $product->imageUrl() }}" alt="{{ $product->name }}" width="56" height="56" loading="lazy">
 										<span class="ph-checkout__item-qty">{{ $qty }}</span>
 									</div>
 									<div class="ph-checkout__item-info">
@@ -191,6 +197,16 @@
 						@include('partials.purchase-terms')
 					</div>
 				</aside>
+			</div>
+
+			<div class="ph-checkout__mobile-bar" aria-label="Conferma ordine">
+				<div class="ph-checkout__mobile-bar-total">
+					<span class="ph-checkout__mobile-bar-label">Totale IVA inclusa</span>
+					<span class="ph-checkout__mobile-bar-amount">€{{ number_format($total, 2) }}</span>
+				</div>
+				<button type="submit" class="ph-checkout__submit" data-checkout-submit>
+					Ordina
+				</button>
 			</div>
 		</form>
 	</div>

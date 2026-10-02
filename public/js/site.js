@@ -530,6 +530,20 @@
     });
 
     document.addEventListener('submit', function (e) {
+        var checkoutForm = e.target;
+        if (!(checkoutForm instanceof HTMLFormElement) || checkoutForm.id !== 'checkout-form') return;
+        if (checkoutForm.dataset.submitting === '1') {
+            e.preventDefault();
+            return;
+        }
+        checkoutForm.dataset.submitting = '1';
+        checkoutForm.querySelectorAll('[data-checkout-submit]').forEach(function (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Invio in corso…';
+        });
+    });
+
+    document.addEventListener('submit', function (e) {
         var form = e.target;
         if (!(form instanceof HTMLFormElement) || !isCartForm(form)) return;
 
