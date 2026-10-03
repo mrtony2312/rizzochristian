@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="profile" href="https://gmpg.org/xfn/11">
+    <meta name="google-site-verification" content="bQXA8IV-eN7zC6-lMGmKttDppB7YVHmEL4pVx57G5G0" />
 
-	
+
 <!-- SEO -->
 <title>@yield('title', 'Rizzo Christian')</title>
 <meta name="description" content="@yield('meta_description', 'Rizzo Christian – pellet di legno, legna da ardere, bricchetti di legno e stufe a pellet.')"/>
