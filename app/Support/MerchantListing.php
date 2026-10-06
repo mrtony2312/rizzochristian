@@ -102,6 +102,13 @@ class MerchantListing
 
     public function availability(): string
     {
+        $override = trim((string) ($this->product->availability_override ?? ''));
+        $valid = ['in_stock', 'out_of_stock', 'limited_availability', 'backorder', 'preorder'];
+
+        if ($override !== '' && in_array($override, $valid, true)) {
+            return $override;
+        }
+
         return $this->product->in_stock
             ? (string) config('merchant.availability.in_stock')
             : (string) config('merchant.availability.out_of_stock');
@@ -109,9 +116,14 @@ class MerchantListing
 
     public function schemaAvailability(): string
     {
-        return $this->product->in_stock
-            ? (string) config('merchant.availability.schema_in_stock')
-            : (string) config('merchant.availability.schema_out_of_stock');
+        $availability = $this->availability();
+
+        return match ($availability) {
+            'in_stock', 'limited_availability' => (string) config('merchant.availability.schema_in_stock'),
+            'backorder' => 'https://schema.org/BackOrder',
+            'preorder' => 'https://schema.org/PreOrder',
+            default => (string) config('merchant.availability.schema_out_of_stock'),
+        };
     }
 
     public function googleProductCategory(): string

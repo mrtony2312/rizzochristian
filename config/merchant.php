@@ -119,8 +119,23 @@ return [
     'availability' => [
         'in_stock' => 'in_stock',
         'out_of_stock' => 'out_of_stock',
+        'limited_availability' => 'limited_availability',
+        'backorder' => 'backorder',
+        'preorder' => 'preorder',
         'schema_in_stock' => 'https://schema.org/InStock',
         'schema_out_of_stock' => 'https://schema.org/OutOfStock',
+        'schema_backorder' => 'https://schema.org/BackOrder',
+        'schema_preorder' => 'https://schema.org/PreOrder',
+
+        /**
+         * Valid values for availability_override on the products table.
+         * null = automatic (derived from the in_stock boolean).
+         */
+        'override_values' => [
+            'limited_availability',
+            'backorder',
+            'preorder',
+        ],
     ],
 
 ];

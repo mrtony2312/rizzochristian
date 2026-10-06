@@ -124,6 +124,20 @@ class MerchantValidator
             );
         }
 
+        $override = trim((string) ($product->availability_override ?? ''));
+        $validOverrides = config('merchant.availability.override_values', []);
+        if ($override !== '' && ! in_array($override, $validOverrides, true)) {
+            $issues[] = $this->issue(
+                $listing,
+                'availability_override',
+                $override,
+                implode(' | ', $validOverrides).' | null',
+                'CRITICAL',
+                'Invalid availability_override value.',
+                'Use one of: '.implode(', ', $validOverrides).'. Set to null for automatic in_stock/out_of_stock.'
+            );
+        }
+
         if ((float) $product->price < (float) $product->regular_price
             && $product->sale_price_starts_at === null
             && $product->sale_price_ends_at === null) {

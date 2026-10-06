@@ -17,6 +17,7 @@ class Product extends Model
         'category_id', 'name', 'slug', 'sku', 'brand', 'gtin', 'mpn', 'energy_efficiency_class',
         'price', 'regular_price', 'sale_price_starts_at', 'sale_price_ends_at',
         'short_description', 'description', 'attributes', 'image', 'in_stock',
+        'availability_override',
     ];
 
     protected $casts = [
