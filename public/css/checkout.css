@@ -292,6 +292,11 @@
 	body.woocommerce-checkout .ph-whatsapp-button {
 		bottom: 78px;
 	}
+
+	/* The theme's global bottom nav sits at z-index 999 and otherwise covers the order bar */
+	body.woocommerce-checkout #motta-mobile-navigation-bar {
+		display: none !important;
+	}
 }
 
 .ph-checkout__summary-card {
