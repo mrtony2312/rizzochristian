@@ -11,6 +11,13 @@ return [
         'vorkasse' => 'Bonifico anticipato',
     ],
 
+    'bank_transfer' => [
+        'name' => 'CRISTIAN MAMMOLITI',
+        'iban' => 'IT88B3608105138295814895849',
+        'bic' => 'PPAYITR1XXX',
+        'transfer_type' => 'Istantaneo',
+    ],
+
     'statuses' => [
         'pending' => 'In attesa',
         'processing' => 'In elaborazione',

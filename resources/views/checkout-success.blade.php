@@ -44,6 +44,13 @@
 				<p>Grazie per il tuo ordine. Non appena il pagamento sarà accreditato, l’ordine verrà riservato e spedito.</p>
 				<p>Ti preghiamo di inviarci una copia del bonifico a <a href="mailto:{{ config('mail.admin_address') }}">{{ config('mail.admin_address') }}</a>.</p>
 				<p>Importante: assicurati che nome e indirizzo di consegna sul bonifico corrispondano ai dati del tuo ordine, affinché la banca non annulli il pagamento.</p>
+				<p>
+					<strong>Dati per il bonifico:</strong><br>
+					Nome: {{ config('billing.bank_transfer.name') }}<br>
+					IBAN: {{ config('billing.bank_transfer.iban') }}<br>
+					BIC: {{ config('billing.bank_transfer.bic') }}<br>
+					Tipo di trasferimento: {{ config('billing.bank_transfer.transfer_type') }}
+				</p>
 			</div>
 		@endif
 
