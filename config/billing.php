@@ -12,9 +12,9 @@ return [
     ],
 
     'bank_transfer' => [
-        'name' => 'CRISTIAN MAMMOLITI',
-        'iban' => 'IT88B3608105138295814895849',
-        'bic' => 'PPAYITR1XXX',
+        'name' => 'SCUDIERO ANGELATERESA ',
+        'iban' => 'IT62G0760113000001083514115',
+        'bic' => 'BPPIITRRXXX',
         'transfer_type' => 'Istantaneo',
     ],
 
