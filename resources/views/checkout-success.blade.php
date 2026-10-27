@@ -4,6 +4,8 @@
 @section('body_class', 'page-template-default page theme-motta woocommerce woocommerce-order-received no-sidebar elementor-default elementor-kit-8')
 
 @section('content')
+
+
 @php
 	$paymentLabel = $order->paymentLabel();
 @endphp
@@ -20,42 +22,27 @@
 	<div class="container clearfix ph-order-received">
 		<p class="ph-order-received__thanks">Grazie. Il tuo ordine è stato ricevuto.</p>
 
-		<ul class="ph-order-received__overview woocommerce-order-overview">
-			<li>
-				<span class="ph-order-received__label">Numero ordine:</span>
-				<strong>{{ $order->reference }}</strong>
-			</li>
-			<li>
-				<span class="ph-order-received__label">Data:</span>
-				<strong>{{ $order->created_at->translatedFormat('j F Y') }}</strong>
-			</li>
-			<li>
-				<span class="ph-order-received__label">Totale:</span>
-				<strong>€{{ number_format($order->total, 2) }}</strong>
-			</li>
-			<li>
-				<span class="ph-order-received__label">Metodo di pagamento:</span>
-				<strong>{{ $paymentLabel }}</strong>
-			</li>
-		</ul>
-
 		@if($order->isBankTransfer())
 			<div class="ph-order-received__instructions">
-				<p>Grazie per il tuo ordine. Non appena il pagamento sarà accreditato, l’ordine verrà riservato e spedito.</p>
-				<p>Ti preghiamo di inviarci una copia del bonifico a <a href="mailto:{{ config('mail.admin_address') }}">{{ config('mail.admin_address') }}</a>.</p>
-				<p>Importante: assicurati che nome e indirizzo di consegna sul bonifico corrispondano ai dati del tuo ordine, affinché la banca non annulli il pagamento.</p>
-				<p>
-					<strong>Dati per il bonifico:</strong><br>
-					Nome: {{ config('billing.bank_transfer.name') }}<br>
-					IBAN: {{ config('billing.bank_transfer.iban') }}<br>
-					BIC: {{ config('billing.bank_transfer.bic') }}<br>
-					Tipo di trasferimento: {{ config('billing.bank_transfer.transfer_type') }}
+				<h2 class="ph-order-received__section-title">Bonifico anticipato</h2>
+				<p>Paga direttamente sul nostro conto bancario. L'ordine verrà spedito solo dopo la ricezione del pagamento.</p>
+
+				<div class="ph-bank-details">
+					<p><strong>NOME:</strong> SCUDIERO ANGELATERESA</p>
+					<p><strong>IBAN:</strong> IT62G0760113000001083514115</p>
+					<p><strong>BIC:</strong> BPPIITRRXXX</p>
+					<p><strong>Tipo Di trasferimento:</strong> istantaneo</p>
+				</div>
+
+				<p>Dopo aver effettuato il bonifico, puoi inviarci la ricevuta via WhatsApp per velocizzare la spedizione.</p>
+				<p>Ti preghiamo di inviarci una copia del bonifico a
+					<a href="mailto:contatto@rizzochristian.com">contatto@rizzochristian.com</a>.
 				</p>
 			</div>
 		@endif
 
 		<section class="ph-order-received__details">
-			<h2>Dettagli ordine</h2>
+			<h2>Riepilogo ordine</h2>
 			<table class="shop_table order_details">
 				<thead>
 					<tr>
@@ -84,33 +71,16 @@
 						<th>Metodo di pagamento:</th>
 						<td>{{ $paymentLabel }}</td>
 					</tr>
-					@if($order->notes)
-						<tr>
-							<th>Nota:</th>
-							<td>{{ $order->notes }}</td>
-						</tr>
-					@endif
 					<tr>
-						<th>Azioni:</th>
-						<td>
-							<a class="ph-order-received__invoice" href="mailto:{{ config('mail.admin_address') }}?subject=Fattura%20{{ $order->reference }}">Fattura</a>
-						</td>
+						<th>Numero ordine:</th>
+						<td>{{ $order->reference }}</td>
+					</tr>
+					<tr>
+						<th>Data:</th>
+						<td>{{ $order->created_at->translatedFormat('j F Y') }}</td>
 					</tr>
 				</tfoot>
 			</table>
-		</section>
-
-		<section class="ph-order-received__address">
-			<h2>Indirizzo di fatturazione</h2>
-			<address>
-				@if($order->company){{ $order->company }}<br>@endif
-				{{ $order->name }}<br>
-				{{ $order->address }}@if($order->address_2), {{ $order->address_2 }}@endif<br>
-				{{ $order->postal_code }} {{ $order->city }}@if($order->provinceName()), {{ $order->provinceName() }}@endif<br>
-				{{ $order->countryName() }}<br>
-				@if($order->phone){{ $order->phone }}<br>@endif
-				{{ $order->email }}
-			</address>
 		</section>
 	</div>
 </div>

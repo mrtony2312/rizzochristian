@@ -416,10 +416,10 @@
 }
 
 /* Order received */
-.ph-order-received {
+/* .ph-order-received {
 	padding: 8px 0 64px;
 	max-width: 920px;
-}
+} */
 
 .ph-order-received__thanks {
 	font-size: 1.35rem;
