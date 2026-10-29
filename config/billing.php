@@ -11,13 +11,6 @@ return [
         'vorkasse' => 'Bonifico anticipato',
     ],
 
-    'bank_transfer' => [
-        'name' => 'SCUDIERO ANGELATERESA ',
-        'iban' => 'IT62G0760113000001083514115',
-        'bic' => 'BPPIITRRXXX',
-        'transfer_type' => 'Istantaneo',
-    ],
-
     'statuses' => [
         'pending' => 'In attesa',
         'processing' => 'In elaborazione',

@@ -5,12 +5,6 @@ Il tuo ordine **#{{ $order->reference }}** è stato registrato con successo e ve
 
 @if($order->isBankTransfer())
 Ti preghiamo di bonificare l’importo totale e di inviarci una copia del bonifico a [{{ config('mail.admin_address') }}](mailto:{{ config('mail.admin_address') }}).
-
-**Dati per il bonifico**<br>
-Nome: {{ config('billing.bank_transfer.name') }}<br>
-IBAN: {{ config('billing.bank_transfer.iban') }}<br>
-BIC: {{ config('billing.bank_transfer.bic') }}<br>
-Tipo di trasferimento: {{ config('billing.bank_transfer.transfer_type') }}
 @endif
 
 ## Riepilogo ordine

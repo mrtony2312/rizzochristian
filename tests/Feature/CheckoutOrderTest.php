@@ -46,6 +46,11 @@ class CheckoutOrderTest extends TestCase
 
         $response->assertRedirect(route('checkout.success', $order));
         $this->assertEmpty(session('cart', []));
+
+        $this->get(route('checkout.success', $order))
+            ->assertOk()
+            ->assertDontSee('IBAN', false)
+            ->assertDontSee('BIC', false);
     }
 
     public function test_checkout_page_is_compact_on_mobile_markup(): void
