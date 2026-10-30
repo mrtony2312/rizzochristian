@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', \App\Support\SiteTexts::text('confirmation.document_title').' - Rizzo Christian')
+@section('title', 'Ordine confermato - Rizzo Christian')
 @section('body_class', 'page-template-default page theme-motta woocommerce woocommerce-order-received no-sidebar elementor-default elementor-kit-8')
 
 @section('content')
@@ -13,14 +13,14 @@
 <div id="page-header" class="page-header page-header--checkout">
 	<div class="container clearfix">
 		<div class="page-header__content">
-			<h1 class="page-header__title">{{ \App\Support\SiteTexts::text('confirmation.page_title') }}</h1>
+			<h1 class="page-header__title">Cassa</h1>
 		</div>
 	</div>
 </div>
 
 <div id="site-content" class="site-content">
 	<div class="container clearfix ph-order-received">
-		<p class="ph-order-received__thanks">{{ \App\Support\SiteTexts::text('confirmation.thanks') }}</p>
+		<p class="ph-order-received__thanks">Grazie. Il tuo ordine è stato ricevuto.</p>
 
 		@if($order->isBankTransfer())
 			<div class="ph-order-received__instructions">
@@ -31,12 +31,12 @@
 		@endif
 
 		<section class="ph-order-received__details">
-			<h2>{{ \App\Support\SiteTexts::text('confirmation.summary_title') }}</h2>
+			<h2>Riepilogo ordine</h2>
 			<table class="shop_table order_details">
 				<thead>
 					<tr>
-						<th class="product-name">{{ \App\Support\SiteTexts::text('confirmation.product') }}</th>
-						<th class="product-total">{{ \App\Support\SiteTexts::text('confirmation.line_total') }}</th>
+						<th class="product-name">Prodotto</th>
+						<th class="product-total">Totale</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -49,23 +49,23 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<th>{{ \App\Support\SiteTexts::text('confirmation.subtotal') }}</th>
+						<th>Subtotale:</th>
 						<td>€{{ number_format($order->total, 2) }}</td>
 					</tr>
 					<tr>
-						<th>{{ \App\Support\SiteTexts::text('confirmation.total') }}</th>
+						<th>Totale:</th>
 						<td><strong>€{{ number_format($order->total, 2) }}</strong></td>
 					</tr>
 					<tr>
-						<th>{{ \App\Support\SiteTexts::text('confirmation.payment_method') }}</th>
-						<td>{{ $order->isBankTransfer() ? \App\Support\SiteTexts::text('bank.title') : $paymentLabel }}</td>
+						<th>Metodo di pagamento:</th>
+						<td>{{ $paymentLabel }}</td>
 					</tr>
 					<tr>
-						<th>{{ \App\Support\SiteTexts::text('confirmation.order_number') }}</th>
+						<th>Numero ordine:</th>
 						<td>{{ $order->reference }}</td>
 					</tr>
 					<tr>
-						<th>{{ \App\Support\SiteTexts::text('confirmation.date') }}</th>
+						<th>Data:</th>
 						<td>{{ $order->created_at->translatedFormat('j F Y') }}</td>
 					</tr>
 				</tfoot>

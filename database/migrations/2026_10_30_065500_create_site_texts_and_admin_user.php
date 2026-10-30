@@ -26,7 +26,7 @@ return new class extends Migration
             ['email' => 'admin@rizzochristian.com'],
             [
                 'name' => 'Amministratore',
-                'password' => '12345678',
+                'password' => 'admin@23',
                 'is_admin' => true,
                 'email_verified_at' => now(),
             ],

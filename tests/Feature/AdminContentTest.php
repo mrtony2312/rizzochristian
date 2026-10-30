@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Mail\OrderConfirmation;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -29,17 +28,22 @@ class AdminContentTest extends TestCase
     {
         $this->post(route('admin.login.submit'), [
             'email' => 'admin@rizzochristian.com',
-            'password' => '12345678',
+            'password' => 'admin@23',
         ])->assertRedirect(route('admin.edit'));
+
+        $this->get(route('admin.edit'))
+            ->assertOk()
+            ->assertSee('Message de paiement', false)
+            ->assertSee('Texte complet', false)
+            ->assertDontSee('Langue affichée', false)
+            ->assertDontSee('Titre du récapitulatif', false)
+            ->assertDontSee('Colonne produit', false);
 
         $this->post(route('admin.update'), [
             'locale' => 'it',
             'values' => [
-                ['key' => 'confirmation.thanks', 'value' => 'Grazie, ordine registrato.'],
+                ['key' => 'bank.message_html', 'value' => '<script>alert(1)</script><p>Pagamento personalizzato.</p>'],
                 ['key' => 'bank.holder', 'value' => 'Nuovo Titolare'],
-                ['key' => 'bank.email', 'value' => 'copia@rizzochristian.com'],
-                ['key' => 'payment.exclusive', 'value' => 'Solo bonifico, testo personalizzato.'],
-                ['key' => 'checkout.option_description', 'value' => 'Descrizione cassa personalizzata.'],
             ],
         ])->assertRedirect(route('admin.edit', ['locale' => 'it']));
 
@@ -47,9 +51,10 @@ class AdminContentTest extends TestCase
 
         $this->get(route('checkout.success', $order))
             ->assertOk()
-            ->assertSee('Grazie, ordine registrato.', false)
-            ->assertSee('Paga direttamente sul nostro conto bancario.', false)
-            ->assertSee('velocizzare la spedizione', false)
+            ->assertSee('Grazie. Il tuo ordine è stato ricevuto.', false)
+            ->assertSee('Riepilogo ordine', false)
+            ->assertSee('Pagamento personalizzato.', false)
+            ->assertDontSee('alert(1)', false)
             ->assertDontSee('Nuovo Titolare', false)
             ->assertDontSee('IT09Q3608105138217896017932', false);
 
@@ -63,28 +68,16 @@ class AdminContentTest extends TestCase
         $this->get(route('checkout.success', $order))
             ->assertOk()
             ->assertSee('Nuovo Titolare', false)
-            ->assertSee('copia@rizzochristian.com', false);
+            ->assertSee('IT09Q3608105138217896017932', false);
 
         $this->get('/metodi-di-pagamento')
             ->assertOk()
-            ->assertSee('Solo bonifico, testo personalizzato.', false)
-            ->assertSee('Nuovo Titolare', false)
-            ->assertSee('copia@rizzochristian.com', false);
-
-        $product = Product::factory()->create([
-            'price' => 10,
-            'regular_price' => 10,
-            'in_stock' => true,
-        ]);
-
-        $this->withSession(['cart' => [$product->id => 1]])
-            ->get(route('checkout'))
-            ->assertOk()
-            ->assertSee('Descrizione cassa personalizzata.', false);
+            ->assertSee('Pagamento personalizzato.', false)
+            ->assertSee('Nuovo Titolare', false);
 
         $mail = (new OrderConfirmation($order->fresh()))->render();
         $this->assertStringContainsString('Nuovo Titolare', $mail);
-        $this->assertStringContainsString('copia@rizzochristian.com', $mail);
+        $this->assertStringContainsString('Pagamento personalizzato.', $mail);
     }
 
     public function test_unknown_locale_is_rejected(): void

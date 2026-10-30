@@ -458,6 +458,14 @@
 	color: #3a3f48;
 }
 
+.ph-bank-message p {
+	margin: 0 0 12px;
+}
+
+.ph-bank-message p:last-child {
+	margin-bottom: 0;
+}
+
 .ph-bank-details {
 	display: grid;
 	gap: 12px;

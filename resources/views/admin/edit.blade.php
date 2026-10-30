@@ -30,15 +30,6 @@
 		</div>
 	@endif
 
-	<label class="admin-field">
-		<span>Langue affichée sur le site</span>
-		<select onchange="window.location='{{ route('admin.edit') }}?locale=' + this.value">
-			@foreach ($locales as $code => $label)
-				<option value="{{ $code }}" @selected($locale === $code)>{{ $label }}</option>
-			@endforeach
-		</select>
-	</label>
-	<p class="admin-hint">Le shop conclut les commandes en italien. Cette liste reprend les langues réellement disponibles sur le site.</p>
 	<input type="hidden" name="locale" value="{{ $locale }}">
 
 	@php($oldValues = old('values', []))
@@ -64,9 +55,9 @@
 						<input type="hidden" name="values[{{ $index }}][value]" value="0">
 						<input type="checkbox" name="values[{{ $index }}][value]" value="1" @checked((string) $current === '1')>
 						<span>{{ $field['label'] }}</span>
-					@elseif (($field['type'] ?? 'text') === 'textarea')
+					@elseif (in_array($field['type'] ?? 'text', ['textarea', 'html'], true))
 						<span>{{ $field['label'] }}</span>
-						<textarea name="values[{{ $index }}][value]" rows="3">{{ $current }}</textarea>
+						<textarea name="values[{{ $index }}][value]" rows="{{ ($field['type'] ?? '') === 'html' ? 12 : 4 }}">{{ $current }}</textarea>
 					@else
 						<span>{{ $field['label'] }}</span>
 						<input

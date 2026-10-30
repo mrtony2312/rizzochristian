@@ -4,18 +4,14 @@
 Il tuo ordine **#{{ $order->reference }}** è stato registrato con successo e verrà ora elaborato.
 
 @if($order->isBankTransfer())
-**{{ \App\Support\SiteTexts::text('bank.title') }}**
+**Bonifico anticipato**
 
-{{ \App\Support\SiteTexts::text('bank.intro') }}
+{{ \App\Support\SiteTexts::plain('bank.message_html') }}
 
-**{{ \App\Support\SiteTexts::text('bank.holder_label') }}:** {{ \App\Support\SiteTexts::text('bank.holder') }}  
-**{{ \App\Support\SiteTexts::text('bank.iban_label') }}:** {{ \App\Support\SiteTexts::text('bank.iban') }}  
-**{{ \App\Support\SiteTexts::text('bank.bic_label') }}:** {{ \App\Support\SiteTexts::text('bank.bic') }}  
-**{{ \App\Support\SiteTexts::text('bank.transfer_type_label') }}:** {{ \App\Support\SiteTexts::text('bank.transfer_type') }}
-
-{{ \App\Support\SiteTexts::text('bank.whatsapp') }}
-
-{{ \App\Support\SiteTexts::text('bank.receipt') }} [{{ \App\Support\SiteTexts::text('bank.email') }}](mailto:{{ \App\Support\SiteTexts::text('bank.email') }}).
+**Nome:** {{ \App\Support\SiteTexts::text('bank.holder') }}  
+**IBAN:** {{ \App\Support\SiteTexts::text('bank.iban') }}  
+**BIC:** {{ \App\Support\SiteTexts::text('bank.bic') }}  
+**Tipo di trasferimento:** {{ \App\Support\SiteTexts::text('bank.transfer_type') }}
 @endif
 
 ## Riepilogo ordine

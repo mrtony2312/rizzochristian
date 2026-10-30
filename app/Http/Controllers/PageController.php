@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Support\SiteTexts;
 use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
 
@@ -24,7 +23,7 @@ class PageController extends Controller
         if ($slug === 'metodi-di-pagamento') {
             $page['content'] = str_replace(
                 '<!--site-text:payment.exclusive-->',
-                '<p>'.e(SiteTexts::text('payment.exclusive')).'</p>',
+                '<p>Il pagamento sullo shop avviene esclusivamente tramite bonifico anticipato. Nessun altro metodo è disponibile al momento dell’ordine.</p>',
                 $page['content']
             );
             $page['content'] = str_replace(

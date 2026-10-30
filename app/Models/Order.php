@@ -49,13 +49,6 @@ class Order extends Model
 
     public function paymentLabel(): string
     {
-        if ($this->isBankTransfer()) {
-            $label = \App\Support\SiteTexts::text('bank.title');
-            if ($label !== '') {
-                return $label;
-            }
-        }
-
         $methods = config('billing.payment_methods', []);
 
         return $methods[$this->payment_method] ?? ucfirst((string) $this->payment_method);

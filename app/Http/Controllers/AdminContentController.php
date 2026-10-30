@@ -84,7 +84,7 @@ class AdminContentController extends Controller
             'locale' => ['required', 'string', Rule::in($locales)],
             'values' => ['required', 'array'],
             'values.*.key' => ['required', 'string', Rule::in(array_keys($fields))],
-            'values.*.value' => ['nullable', 'string', 'max:2000'],
+            'values.*.value' => ['nullable', 'string', 'max:8000'],
         ]);
 
         $errors = [];
@@ -96,6 +96,12 @@ class AdminContentController extends Controller
 
             if ($type === 'checkbox') {
                 $data['values'][$index]['value'] = $value === '1' ? '1' : '0';
+
+                continue;
+            }
+
+            if ($type === 'html') {
+                $data['values'][$index]['value'] = SiteTexts::sanitizeHtml($value);
 
                 continue;
             }
