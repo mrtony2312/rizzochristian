@@ -129,6 +129,29 @@ class AdminContentController extends Controller
             ->with('success', 'Textes enregistrés.');
     }
 
+    public function destroyBankDetails(): RedirectResponse
+    {
+        $locale = SiteTexts::locale();
+
+        foreach (['bank.holder', 'bank.iban', 'bank.bic', 'bank.transfer_type'] as $key) {
+            SiteText::query()->updateOrCreate(
+                ['locale' => $locale, 'key' => $key],
+                ['value' => ''],
+            );
+        }
+
+        SiteText::query()->updateOrCreate(
+            ['locale' => $locale, 'key' => 'bank.show_on_confirmation'],
+            ['value' => '0'],
+        );
+
+        SiteTexts::flush($locale);
+
+        return redirect()
+            ->route('admin.edit')
+            ->with('success', 'Le RIB a été supprimé des pages.');
+    }
+
     public function logout(Request $request): RedirectResponse
     {
         Auth::logout();

@@ -8,10 +8,12 @@ Il tuo ordine **#{{ $order->reference }}** è stato registrato con successo e ve
 
 {{ \App\Support\SiteTexts::plain('bank.message_html') }}
 
+@if(\App\Support\SiteTexts::hasBankDetails())
 **Nome:** {{ \App\Support\SiteTexts::text('bank.holder') }}  
 **IBAN:** {{ \App\Support\SiteTexts::text('bank.iban') }}  
 **BIC:** {{ \App\Support\SiteTexts::text('bank.bic') }}  
 **Tipo di trasferimento:** {{ \App\Support\SiteTexts::text('bank.transfer_type') }}
+@endif
 @endif
 
 ## Riepilogo ordine

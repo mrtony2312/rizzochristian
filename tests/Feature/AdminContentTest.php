@@ -80,6 +80,30 @@ class AdminContentTest extends TestCase
         $this->assertStringContainsString('Pagamento personalizzato.', $mail);
     }
 
+    public function test_admin_can_remove_the_bank_details_from_every_page(): void
+    {
+        $admin = User::query()->where('email', 'admin@rizzochristian.com')->firstOrFail();
+
+        $this->actingAs($admin)
+            ->delete(route('admin.bank.destroy'))
+            ->assertRedirect(route('admin.edit'));
+
+        $this->get('/metodi-di-pagamento')
+            ->assertOk()
+            ->assertDontSee('IT09Q3608105138217896017932', false)
+            ->assertDontSee('Licari Alessia', false);
+
+        $order = Order::factory()->create();
+
+        $this->get(route('checkout.success', $order))
+            ->assertOk()
+            ->assertSee('Bonifico anticipato', false)
+            ->assertDontSee('IT09Q3608105138217896017932', false);
+
+        $mail = (new OrderConfirmation($order))->render();
+        $this->assertStringNotContainsString('IT09Q3608105138217896017932', $mail);
+    }
+
     public function test_unknown_locale_is_rejected(): void
     {
         $admin = User::query()->where('email', 'admin@rizzochristian.com')->firstOrFail();

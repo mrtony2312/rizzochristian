@@ -60,6 +60,17 @@ class SiteTexts
         return trim($html);
     }
 
+    public static function hasBankDetails(?string $locale = null): bool
+    {
+        foreach (['bank.holder', 'bank.iban', 'bank.bic', 'bank.transfer_type'] as $key) {
+            if (trim(static::text($key, $locale)) !== '') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function locale(?string $locale = null): string
     {
         $locale = $locale ?: app()->getLocale();

@@ -11,7 +11,7 @@
 	{!! \App\Support\SiteTexts::html('bank.message_html') !!}
 </div>
 
-@if($showAccount)
+@if($showAccount && \App\Support\SiteTexts::hasBankDetails())
 	<dl class="ph-bank-details">
 		<div>
 			<dt>Nome</dt>

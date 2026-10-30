@@ -18,7 +18,7 @@ return [
         ],
         [
             'label' => 'Coordonnées bancaires',
-            'hint' => 'Cochez la case pour les afficher aussi sur la page de confirmation, sous le message. Elles restent toujours visibles dans l’e-mail, le suivi et la page Méthodes de paiement.',
+            'hint' => 'Cochez la case pour les afficher aussi sur la page de confirmation, sous le message. « Supprimer le RIB » les retire de toutes les pages. Vous pouvez les saisir à nouveau ensuite.',
             'keys' => [
                 'bank.show_on_confirmation',
                 'bank.holder',

@@ -76,10 +76,18 @@
 		</section>
 	@endforeach
 
-	<button type="submit" class="admin-button">Enregistrer</button>
+	<div class="admin-actions">
+		<button type="submit" class="admin-button">Enregistrer</button>
+		<button type="submit" class="admin-button admin-button--danger" form="admin-delete-rib">Supprimer le RIB</button>
+	</div>
 </form>
 
 <form id="admin-logout" method="POST" action="{{ route('admin.logout') }}">
 	@csrf
+</form>
+
+<form id="admin-delete-rib" method="POST" action="{{ route('admin.bank.destroy') }}" onsubmit="return confirm('Supprimer le RIB de toutes les pages ?');">
+	@csrf
+	@method('DELETE')
 </form>
 @endsection

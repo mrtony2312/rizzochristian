@@ -50,6 +50,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('admin')->group(function () {
         Route::get('/', [AdminContentController::class, 'edit'])->name('edit');
         Route::post('/', [AdminContentController::class, 'update'])->name('update');
+        Route::delete('rib', [AdminContentController::class, 'destroyBankDetails'])->name('bank.destroy');
         Route::post('logout', [AdminContentController::class, 'logout'])->name('logout');
     });
 });
