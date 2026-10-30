@@ -11,13 +11,6 @@ return [
         'vorkasse' => 'Bonifico anticipato',
     ],
 
-    'bank_transfer' => [
-        'holder' => 'Licari Alessia',
-        'iban' => 'IT09Q3608105138217896017932',
-        'bic' => 'PPAYITR1XXX',
-        'transfer_type' => 'istantaneo',
-    ],
-
     'statuses' => [
         'pending' => 'In attesa',
         'processing' => 'In elaborazione',

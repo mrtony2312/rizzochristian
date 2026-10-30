@@ -4,18 +4,18 @@
 Il tuo ordine **#{{ $order->reference }}** è stato registrato con successo e verrà ora elaborato.
 
 @if($order->isBankTransfer())
-**Bonifico anticipato**
+**{{ \App\Support\SiteTexts::text('bank.title') }}**
 
-Paga direttamente sul nostro conto bancario. L'ordine verrà spedito solo dopo la ricezione del pagamento.
+{{ \App\Support\SiteTexts::text('bank.intro') }}
 
-**Nome:** {{ config('billing.bank_transfer.holder') }}  
-**IBAN:** {{ config('billing.bank_transfer.iban') }}  
-**BIC:** {{ config('billing.bank_transfer.bic') }}  
-**Tipo di trasferimento:** {{ config('billing.bank_transfer.transfer_type') }}
+**{{ \App\Support\SiteTexts::text('bank.holder_label') }}:** {{ \App\Support\SiteTexts::text('bank.holder') }}  
+**{{ \App\Support\SiteTexts::text('bank.iban_label') }}:** {{ \App\Support\SiteTexts::text('bank.iban') }}  
+**{{ \App\Support\SiteTexts::text('bank.bic_label') }}:** {{ \App\Support\SiteTexts::text('bank.bic') }}  
+**{{ \App\Support\SiteTexts::text('bank.transfer_type_label') }}:** {{ \App\Support\SiteTexts::text('bank.transfer_type') }}
 
-Dopo aver effettuato il bonifico, puoi inviarci la ricevuta via WhatsApp per velocizzare la spedizione.
+{{ \App\Support\SiteTexts::text('bank.whatsapp') }}
 
-Ti preghiamo di inviarci una copia del bonifico a [{{ config('mail.admin_address') }}](mailto:{{ config('mail.admin_address') }}).
+{{ \App\Support\SiteTexts::text('bank.receipt') }} [{{ \App\Support\SiteTexts::text('bank.email') }}](mailto:{{ \App\Support\SiteTexts::text('bank.email') }}).
 @endif
 
 ## Riepilogo ordine

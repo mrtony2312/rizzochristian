@@ -49,11 +49,14 @@ class CheckoutOrderTest extends TestCase
 
         $this->get(route('checkout.success', $order))
             ->assertOk()
-            ->assertSee('Licari Alessia', false)
-            ->assertSee('IT09Q3608105138217896017932', false)
-            ->assertSee('PPAYITR1XXX', false)
-            ->assertSee('istantaneo', false)
-            ->assertSee('contatto@rizzochristian.com', false);
+            ->assertSee('Grazie. Il tuo ordine è stato ricevuto.', false)
+            ->assertSee('Bonifico anticipato', false)
+            ->assertSee('Paga direttamente sul nostro conto bancario.', false)
+            ->assertSee('velocizzare la spedizione', false)
+            ->assertSee('copia del bonifico', false)
+            ->assertDontSee('Licari Alessia', false)
+            ->assertDontSee('IT09Q3608105138217896017932', false)
+            ->assertDontSee('PPAYITR1XXX', false);
     }
 
     public function test_checkout_page_is_compact_on_mobile_markup(): void

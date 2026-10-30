@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminContentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -42,6 +43,16 @@ Route::get('lista-desideri/render', [FavoriteController::class, 'renderGuest'])-
 Route::post('lista-desideri/toggle/{product}', [FavoriteController::class, 'toggle'])->name('wishlist.toggle');
 
 Route::get('traccia-ordine', [OrderTrackingController::class, 'show'])->name('tracking-order');
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('login', [AdminContentController::class, 'showLogin'])->name('login');
+    Route::post('login', [AdminContentController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
+    Route::middleware('admin')->group(function () {
+        Route::get('/', [AdminContentController::class, 'edit'])->name('edit');
+        Route::post('/', [AdminContentController::class, 'update'])->name('update');
+        Route::post('logout', [AdminContentController::class, 'logout'])->name('logout');
+    });
+});
 Route::get('centro-assistenza', fn () => view('pages.help-center'))->name('help-center');
 Route::get('contattaci', [ContactController::class, 'show'])->name('contact');
 Route::post('contattaci', [ContactController::class, 'store'])->name('contact.store');
