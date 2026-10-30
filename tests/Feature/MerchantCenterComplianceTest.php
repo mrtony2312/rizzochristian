@@ -68,6 +68,9 @@ class MerchantCenterComplianceTest extends TestCase
         $this->get('/metodi-di-pagamento')
             ->assertOk()
             ->assertSee('bonifico anticipato', false)
+            ->assertSee('Licari Alessia', false)
+            ->assertSee('IT09Q3608105138217896017932', false)
+            ->assertSee('PPAYITR1XXX', false)
             ->assertDontSee('Carta di credito', false);
 
         $this->get('/resi-e-rimborsi')

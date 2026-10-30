@@ -517,7 +517,7 @@
     <link rel='stylesheet' id='motta-css' href='/wp-content/themes/motta/style.css?ver=20250115' media='all' />
     <link rel='stylesheet' id='cart-panel-css' href="{{ asset('css/cart-panel.css') }}?ver=3" media='all' />
     <link rel='stylesheet' id='catalog-css' href="{{ asset('css/catalog.css') }}?ver=7" media='all' />
-    <link rel='stylesheet' id='checkout-css' href="{{ asset('css/checkout.css') }}?ver=3" media='all' />
+    <link rel='stylesheet' id='checkout-css' href="{{ asset('css/checkout.css') }}?ver=4" media='all' />
     <link rel='stylesheet' id='pages-css' href="{{ asset('css/pages.css') }}?ver=7" media='all' />
     <style id="motta-inline-css">
         body {}

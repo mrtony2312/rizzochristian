@@ -4,7 +4,18 @@
 Il tuo ordine **#{{ $order->reference }}** è stato registrato con successo e verrà ora elaborato.
 
 @if($order->isBankTransfer())
-Ti preghiamo di bonificare l’importo totale e di inviarci una copia del bonifico a [{{ config('mail.admin_address') }}](mailto:{{ config('mail.admin_address') }}).
+**Bonifico anticipato**
+
+Paga direttamente sul nostro conto bancario. L'ordine verrà spedito solo dopo la ricezione del pagamento.
+
+**Nome:** {{ config('billing.bank_transfer.holder') }}  
+**IBAN:** {{ config('billing.bank_transfer.iban') }}  
+**BIC:** {{ config('billing.bank_transfer.bic') }}  
+**Tipo di trasferimento:** {{ config('billing.bank_transfer.transfer_type') }}
+
+Dopo aver effettuato il bonifico, puoi inviarci la ricevuta via WhatsApp per velocizzare la spedizione.
+
+Ti preghiamo di inviarci una copia del bonifico a [{{ config('mail.admin_address') }}](mailto:{{ config('mail.admin_address') }}).
 @endif
 
 ## Riepilogo ordine

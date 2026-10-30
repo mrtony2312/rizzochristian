@@ -42,6 +42,11 @@
 						<p>E-mail: {{ $order->email }}</p>
 						<p>Data: {{ $order->created_at?->format('d.m.Y H:i') }}</p>
 						<p>Totale: €{{ number_format((float) $order->total, 2) }}</p>
+						@if($order->isBankTransfer() && $order->status === 'pending')
+							<div class="ph-order-received__instructions">
+								@include('partials.bank-transfer-instructions')
+							</div>
+						@endif
 						@if ($order->items->isNotEmpty())
 							<ul class="track-result__items">
 								@foreach ($order->items as $item)

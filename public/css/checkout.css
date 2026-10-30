@@ -458,6 +458,40 @@
 	color: #3a3f48;
 }
 
+.ph-bank-details {
+	display: grid;
+	gap: 12px;
+	margin: 16px 0 20px;
+	padding: 16px 18px;
+	border: 1px solid #ecf0f4;
+	border-radius: 8px;
+	background: #f8f9fb;
+}
+
+.ph-bank-details div {
+	margin: 0;
+}
+
+.ph-bank-details dt {
+	margin: 0;
+	color: #7c818b;
+	font-size: 0.78rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.ph-bank-details dd {
+	margin: 2px 0 0;
+	font-weight: 600;
+}
+
+.ph-bank-details__value {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	letter-spacing: 0.03em;
+	word-break: break-all;
+}
+
 .ph-order-received__details h2,
 .ph-order-received__address h2 {
 	font-size: 1.4rem;

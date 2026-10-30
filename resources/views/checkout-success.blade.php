@@ -24,13 +24,7 @@
 
 		@if($order->isBankTransfer())
 			<div class="ph-order-received__instructions">
-				<h2 class="ph-order-received__section-title">Bonifico anticipato</h2>
-				<p>Paga direttamente sul nostro conto bancario. L'ordine verrà spedito solo dopo la ricezione del pagamento.</p>
-
-				<p>Dopo aver effettuato il bonifico, puoi inviarci la ricevuta via WhatsApp per velocizzare la spedizione.</p>
-				<p>Ti preghiamo di inviarci una copia del bonifico a
-					<a href="mailto:contatto@rizzochristian.com">contatto@rizzochristian.com</a>.
-				</p>
+				@include('partials.bank-transfer-instructions')
 			</div>
 		@endif
 

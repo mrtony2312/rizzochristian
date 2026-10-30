@@ -49,8 +49,11 @@ class CheckoutOrderTest extends TestCase
 
         $this->get(route('checkout.success', $order))
             ->assertOk()
-            ->assertDontSee('IBAN', false)
-            ->assertDontSee('BIC', false);
+            ->assertSee('Licari Alessia', false)
+            ->assertSee('IT09Q3608105138217896017932', false)
+            ->assertSee('PPAYITR1XXX', false)
+            ->assertSee('istantaneo', false)
+            ->assertSee('contatto@rizzochristian.com', false);
     }
 
     public function test_checkout_page_is_compact_on_mobile_markup(): void

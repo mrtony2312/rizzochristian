@@ -122,7 +122,7 @@
 							<input type="radio" name="payment_method" value="bonifico" checked>
 							<span class="ph-payment-option__body">
 								<span class="ph-payment-option__title">Bonifico anticipato</span>
-								<span class="ph-payment-option__desc">Paga direttamente sul nostro conto bancario. Usa il numero d’ordine come causale. L’ordine verrà spedito solo dopo la ricezione del pagamento.</span>
+								<span class="ph-payment-option__desc">Paga direttamente sul nostro conto bancario con bonifico istantaneo. L’ordine verrà spedito solo dopo la ricezione del pagamento. Le coordinate bancarie vengono mostrate subito dopo l’ordine.</span>
 							</span>
 						</label>
 
